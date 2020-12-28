@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ludo</title>
+    <link rel="stylesheet" type="text/css" href="./stylesheets/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+</head>
+<body>
+    <div id="startGameOverlay" style="visibility: visible">
+        <button onclick="startGame()">Start game</button>
+    </div>
+    <div id="gameScreen" style="visibility: hidden">
+        <button onclick="endGame()">Leave game</button>
+        <div class="container">
+        <div class="container1">
+            <div class="row1-col1 green">
+                <div class="row1-col1-child white">
+                    <div class="green" id="gh1">gh1</div>
+                    <div class="green" id="gh2">gh2</div>
+                    <div class="green" id="gh3">gh3</div>
+                    <div class="green" id="gh4">gh4</div>
+                </div>
+            </div>   <!--green-->
+            <div class="row1-col2">
+                <!--1st line-->
+                <div id="24">24</div>
+                <div id="25">25</div>
+                <div id="26">26</div>
+                <!--2nd line-->
+                <div id="23">23</div>
+                <div id="y1" class="yellow">y1</div>
+                <div id="27" class="yellow">27</div>
+                <!--3rd line-->
+                <div id="22">22</div>
+                <div id="y2" class="yellow">y2</div>
+                <div id="28">28</div>
+                <!--4th line-->
+                <div id="21">21</div>
+                <div id="y3" class="yellow">y3</div>
+                <div id="29">29</div>
+                <!--5th line-->
+                <div id="20">20</div>
+                <div id="y4" class="yellow">y4</div>
+                <div id="30">30</div>
+                <!--6th line-->
+                <div id="19">19</div>
+                <div id="y5" class="yellow">y5</div>
+                <div id="31">31</div>
+            </div>   <!--path-->
+            <div class="row1-col3 yellow">
+                <div class="row1-col3-child white">
+                    <div class="yellow" id="yh1">yh1</div>
+                    <div class="yellow" id="yh2">yh2</div>
+                    <div class="yellow" id="yh3">yh3</div>
+                    <div class="yellow" id="yh4">yh4</div>
+                </div>
+            </div>   <!--yellow-->
+        </div>
+        <div class="container2">
+            <div class="row2-col1">
+                <!--1st line-->
+                <div id="13">13</div>
+                <div id="14" class="green">14</div>
+                <div id="15">15</div>
+                <div id="16">16</div>
+                <div id="17">17</div>
+                <div id="18">18</div>
+                <!--2nd line-->
+                <div>12</div>
+                <div class="green" id="g1">g1</div>
+                <div class="green" id="g2">g2</div>
+                <div class="green" id="g3">g3</div>
+                <div class="green" id="g4">g4</div>
+                <div class="green" id="g5">g5</div>
+                <!--3rd line-->
+                <div id="11">11</div>
+                <div id="10">10</div>
+                <div id="9">9</div>
+                <div id="8">8</div>
+                <div id="7">7</div>
+                <div id="6">6</div>
+            </div>   <!--path-->
+            <div class="row2-col2"></div>   <!--home-->
+            <div class="row2-col3">
+                <!--1st line-->
+                <div id="32">32</div>
+                <div id="33">33</div>
+                <div id="34">34</div>
+                <div id="35">35</div>
+                <div id="36">36</div>
+                <div id="37">37</div>
+                <!--2nd line-->
+                <div class="blue" id="b5">b5</div>
+                <div class="blue" id="b4">b4</div>
+                <div class="blue" id="b3">b3</div>
+                <div class="blue" id="b2">b2</div>
+                <div class="blue" id="b1">b1</div>
+                <div id="38">38</div>
+                <!-- 3rd line-->
+                <div id="44">44</div>
+                <div id="43">43</div>
+                <div id="42">42</div>
+                <div id="41">41</div>
+                <div id="40" class="blue">40</div>
+                <div id="39">39</div>
+            </div>   <!--path-->
+        </div>
+        <div class="container3">
+            <div class="row3-col1 red">
+                <div class="row3-col1-child white">
+                    <div class="red" id="rh1">rh1</div>
+                    <div class="red" id="rh2">rh2</div>
+                    <div class="red" id="rh3">rh3</div>
+                    <div class="red" id="rh4">rh4</div>
+                </div>
+            </div>   <!--red-->
+            <div class="row3-col2">
+                <!--6th line-->
+                <div id="5">5</div>
+                <div id="r5" class="red">r5</div>
+                <div id="45">45</div>
+                <!--5th line-->
+                <div id="4">4</div>
+                <div id="r4" class="red">r4</div>
+                <div id="46">46</div>
+                <!--4th line-->
+                <div id="3">3</div>
+                <div id="r3" class="red">r3</div>
+                <div id="47">47</div>
+                <!--3rd line-->
+                <div id="2">2</div>
+                <div id="r2" class="red">r2</div>
+                <div id="48">48</div>
+                <!--2nd line-->
+                <div id="c1" class="red">1</div>
+                <div id="r1" class="red">r1</div>
+                <div id="49">49</div>
+                <!--1st line-->
+                <div id="52">52</div>
+                <div id="51">51</div>
+                <div id="50">50</div>
+            </div>   <!--path-->
+            <div class="row3-col3 blue">
+                <div class="row3-col3-child white">
+                    <div class="blue" id="bh1">bh1</div>
+                    <div class="blue" id="bh2">bh2</div>
+                    <div class="blue" id="bh3">bh3</div>
+                    <div class="blue" id="bh4">bh4</div>
+                </div>
+            </div>   <!--blue-->
+        </div>
+    </div>
+    </div>
+</body>
+<script src="./javascripts/game.js"></script>
+</html>
