@@ -11,11 +11,6 @@ let playerModule = (function(playerIDValue) {
 
     /* public member; accessible to everyone */
     return {
-        /* Can be invoked as to see whether one's pawn is of the same player */
-        playerEquals : function(player1, player2) {
-            return player1.playerID === player2.playerID;
-        },
-            
         /* Increase score */
         incScore : function() {
             score++;
