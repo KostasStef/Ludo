@@ -1,33 +1,33 @@
 /* Class depicting a Player; a person participating in Ludo */
-var playerModule = (function(playerIDvalue){
+let playerModule = (function(playerIDValue) {
     /* private members */
-    if(playerIDvalue===null)
-        var playerID = 0;
+    if (playerIDValue === null)
+        let playerID = 0;
     else
-        var playerID = 0 + playerIDvalue;
+        let playerID = 0 + playerIDValue;
 
-    var score = 0;
-    var hasTurn = false;
+    let score = 0;
+    let hasTurn = false;
 
     /* public member; accessible to everyone */
     return {
         /* Can be invoked as to see whether one's pawn is of the same player */
         playerEquals : function(player1, player2) {
-            player1.playerID === player2.playerID;
+            return player1.playerID === player2.playerID;
         },
             
         /* Increase score */
-        incrScore : function() {
+        incScore : function() {
             score++;
         },
 
         /* Get score */
         getScore : function() {
-            return this.score;
+            return score;
         },
 
-        playerTurn : function(turn) {
-            this.hasTurn = turn;
+        setTurn : function(turn) {
+            hasTurn = turn;
         }
     }
 
