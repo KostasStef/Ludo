@@ -9,7 +9,7 @@ let pawnModule = (function (pawnID, route, belongsToPlayerID) {
     else if (belongsToPlayerID === 3) colourLetter = 'b';
 
     let position = 0;
-    
+
     return {
         getPawnID: function () {
             return pawnID;
