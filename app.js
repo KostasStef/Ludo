@@ -21,27 +21,34 @@ wss.on("connection", function connection(ws) {
     let con = ws;
     con.id = connectionID++;
 
-    con.send(JSON.stringify({
-        id: 0,
-        players: [
-            {
-                id: 0,
-                pawns: [0, 0, 0, 0]
-            },
-            {
-                id: 1,
-                pawns: [0, 0, 0, 0]
-            },
-            {
-                id: 2,
-                pawns: [0, 0, 0, 0]
-            },
-            {
-                id: 3,
-                pawns: [0, 0, 0, 0]
-            }
-        ]
-    }));
+    // con.send(JSON.stringify({
+    //     id: 0,
+    //     players: [
+    //         {
+    //             id: 0,
+    //             pawns: [0, 1, 2, 3]
+    //         },
+    //         {
+    //             id: 1,
+    //             pawns: [0, 1, 2, 3]
+    //         },
+    //         {
+    //             id: 2,
+    //             pawns: [0, 1, 2, 3]
+    //         },
+    //         {
+    //             id: 3,
+    //             pawns: [0, 1, 2, 3]
+    //         }
+    //     ]
+    // }));
+
+    con.send(JSON.stringify(
+        {
+            numberOfPlayers: connectionID,
+            test: "testaki"
+        }
+    ));
 
     console.log(
         "Connected %s",

@@ -15,6 +15,7 @@ function startGame() {
 
     socket.onmessage = function(e) {
         console.log(JSON.parse(e.data));
+        console.log("incoming test: " + JSON.parse(e.data).test);
     }
 
     document.getElementById("startGameOverlay").style.visibility = "hidden";
