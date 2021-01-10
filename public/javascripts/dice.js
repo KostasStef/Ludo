@@ -13,7 +13,7 @@ var gameDiceModule = ( function() {
         
         /* Get method of the most recent dice roll */
         getNumberRolled : function() {
-            return numberRolled;
+            return this.numberRolled;
         }
     }
 
@@ -27,3 +27,13 @@ const randomRoll = (min = 1, max = 6) => {
 
     return Math.round(roll);
 }
+
+export {gameDiceModule};
+
+// module.exports = gameDiceModule;
+
+// export function diceRoll() {
+//     let max = 6;
+//     let min = 1;
+//     return Math.round(Math.random()*(max - min) + min);
+// }

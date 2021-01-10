@@ -1,4 +1,16 @@
 let soc = null;
+// export * from "./dice.js";
+// import * as dice from "./dice";
+
+// import('./dice.js').then(module => {module.diceRoll();});
+let importaki = import('./dice.js')
+.then(module => {
+    module.gameDiceModule.rollTheDice();
+    diceRoll = module.gameDiceModule.getNumberRolled();
+    
+    console.log(diceRoll);
+    return module.gameDiceModule;
+});
 
 function startGame() {
     console.log("Start game.");
@@ -29,6 +41,10 @@ function endGame() {
 
     document.getElementById("startGameOverlay").style.visibility = "visible";
     document.getElementById("gameScreen").style.visibility = "hidden";
+}
+
+function rollDice() {
+    console.log("You got a" + getNumberRolled() + "!!!1!1!1!!");
 }
 
 let pawn = document.createElement("IMG");
