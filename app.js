@@ -45,8 +45,7 @@ wss.on("connection", function connection(ws) {
 
     con.send(JSON.stringify(
         {
-            numberOfPlayers: connectionID,
-            test: "testaki"
+            numberOfPlayers: connectionID
         }
     ));
 
@@ -58,6 +57,18 @@ wss.on("connection", function connection(ws) {
     con.on("message", function incoming(message) {
         console.log(message);
         // con.send("Hello from the server!");
+    });
+
+    con.on("message", function incoming(message) {
+        if (message === "rollDice") {
+            let randomRoll = (min = 1, max = 6) => {
+                let roll = Math.random() * (max - min) + min;
+        
+                return Math.round(roll);
+            }
+            console.log("number rolled: " + randomRoll(1, 6));
+
+        }
     });
 
     con.on("close", function (code) {

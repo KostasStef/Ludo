@@ -3,14 +3,14 @@ let soc = null;
 // import * as dice from "./dice";
 
 // import('./dice.js').then(module => {module.diceRoll();});
-let importaki = import('./dice.js')
-.then(module => {
-    module.gameDiceModule.rollTheDice();
-    diceRoll = module.gameDiceModule.getNumberRolled();
+// let importaki = import('./dice.js')
+// .then(module => {
+//     module.gameDiceModule.rollTheDice();
+//     diceRoll = module.gameDiceModule.getNumberRolled();
     
-    console.log(diceRoll);
-    return module.gameDiceModule;
-});
+//     console.log(diceRoll);
+//     return module.gameDiceModule;
+// });
 
 function startGame() {
     console.log("Start game.");
@@ -26,8 +26,10 @@ function startGame() {
     soc = socket;
 
     socket.onmessage = function(e) {
-        console.log(JSON.parse(e.data));
-        console.log("incoming test: " + JSON.parse(e.data).test);
+        var messageJSON = JSON.parse(e.data);
+        console.log(messageJSON);
+        var connectionID = messageJSON.numberOfPlayers;
+        spawnPawns(connectionID);
     }
 
     document.getElementById("startGameOverlay").style.visibility = "hidden";
@@ -43,15 +45,53 @@ function endGame() {
     document.getElementById("gameScreen").style.visibility = "hidden";
 }
 
-function rollDice() {
-    console.log("You got a" + getNumberRolled() + "!!!1!1!1!!");
+function rollTheDice() {
+    soc.send("rollDice");
 }
 
-let pawn = document.createElement("IMG");
-pawn.src = "./images/pawn_blue.png"
-pawn.style.height = "32px";
-pawn.style.width = "32px";
-pawn.style.position = "relative";
-pawn.style.top = "0px";
-pawn.style.left = "0px";
-document.getElementById("c1").appendChild(pawn);
+function spawnPawns(connectionID) {
+    
+    for (i = 1; i < 5; i++) {
+        let pawn = document.createElement("IMG");
+
+        pawn.style.height = "32px";
+        pawn.style.width = "32px";
+        pawn.style.position = "relative";
+        pawn.style.top = "0px";
+        pawn.style.left = "0px";
+        // pawn.style.border = "1px";
+        // pawn.style.borderColor = "black";
+        pawn.style.textShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)";
+
+        if (connectionID === 1) {
+            pawn.src = "./images/pawn_red.png";
+            document.getElementById("rh"+i).appendChild(pawn);
+            pawn.setAttribute("pawnsition", "rh"+i);
+            pawn.id = "rp" + i;
+        } else if (connectionID === 2) {
+            pawn.src = "./images/pawn_blue.png";
+            document.getElementById("bh"+i).appendChild(pawn);
+            pawn.setAttribute("pawnsition", "bh"+i);
+            pawn.id = "bp" + i;
+        } else if (connectionID === 3) {
+            pawn.src = "./images/pawn_yellow.png";
+            document.getElementById("yh"+i).appendChild(pawn);
+            pawn.setAttribute("pawnsition", "yh"+i);
+            pawn.id = "yp" + i;
+        } else if (connectionID === 4) {
+            pawn.src = "./images/pawn_green.png";
+            document.getElementById("gh"+i).appendChild(pawn);
+            pawn.setAttribute("pawnsition", "gh"+i);
+            pawn.id = "gp" + i;
+        }
+    }
+}
+
+// let pawn = document.createElement("IMG");
+// pawn.src = "./images/pawn_blue.png"
+// pawn.style.height = "32px";
+// pawn.style.width = "32px";
+// pawn.style.position = "relative";
+// pawn.style.top = "0px";
+// pawn.style.left = "0px";
+// document.getElementById("c1").appendChild(pawn);
