@@ -3,6 +3,8 @@ const http = require("http");
 
 const websocket = require("ws");
 
+const fs = require("fs");
+
 const port = process.argv[2];
 const app = express();
 
@@ -59,6 +61,13 @@ wss.on("connection", function connection(ws) {
         // con.send("Hello from the server!");
     });
 
+    // fs.writeFile("./public/server.txt", JSON.stringify(roll), 'utf8', (err) => {
+    //     if (err)
+    //         console.log('Error writing to file: ${err}');
+    //     else 
+    //         console.log('Written successfully to file');
+    // });
+
     con.on("message", function incoming(message) {
         if (message === "rollDice") {
             let randomRoll = (min = 1, max = 6) => {
@@ -66,8 +75,15 @@ wss.on("connection", function connection(ws) {
         
                 return Math.round(roll);
             }
-            console.log("number rolled: " + randomRoll(1, 6));
+            var diceRoll = randomRoll(1, 6);
+            console.log("number rolled: " + diceRoll + "!");
+            let roll = {
+                            header: "diceRolled",
+                            roll: diceRoll
+                        };
 
+
+            con.send(JSON.stringify(roll));
         }
     });
 
