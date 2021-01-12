@@ -14,7 +14,11 @@ let connectionID = null;
 // });
 
 function startGame() {
-    console.log("Start game.");
+    console.log('Start Game')
+}
+
+function connectToServer() {
+    console.log("Connecting to server");
 
     const socket = new WebSocket("ws://localhost:3000");
 
@@ -27,7 +31,7 @@ function startGame() {
     soc = socket;
 
     socket.onmessage = function(e) {
-        var messageJSON = JSON.parse(e.data);
+        let messageJSON = JSON.parse(e.data);
         console.log(messageJSON);
         connectionID = messageJSON.numberOfPlayers;
         spawnPawns(connectionID);
@@ -44,12 +48,14 @@ function endGame() {
 
     document.getElementById("startGameOverlay").style.visibility = "visible";
     document.getElementById("gameScreen").style.visibility = "hidden";
+
+    window.location.href = './';
 }
 
 function rollTheDice() {
     soc.send("rollDice");
 
-    var millisecondsToWait = 1000;
+    let millisecondsToWait = 1000;
     setTimeout(function() {
         // Whatever you want to do after the wait
     }, millisecondsToWait);
@@ -67,8 +73,8 @@ function rollTheDice() {
 }
 
 function setPawnsition(pawnID, diceRoll) {
-    var pawn = document.getElementById(pawnID);
-    var pawnNumber = pawn.getAttribute("pawnNumber");
+    let pawn = document.getElementById(pawnID);
+    let pawnNumber = pawn.getAttribute("pawnNumber");
 
     let redRoute = ["rh" + pawnNumber, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
         22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
@@ -95,14 +101,14 @@ function setPawnsition(pawnID, diceRoll) {
 
     console.log(route.toString());
 
-    var pawnCurrentPositionIndex = route.indexOf(pawn.getAttribute("pawnsition"));
+    let pawnCurrentPositionIndex = route.indexOf(pawn.getAttribute("pawnsition"));
     if(pawnCurrentPositionIndex<0)
         pawnCurrentPositionIndex = route.indexOf(parseInt(pawn.getAttribute("pawnsition")));   
     console.log("pawn index: " + pawnCurrentPositionIndex);
-    var pawnCurrentPosition = route[pawnCurrentPositionIndex];
+    let pawnCurrentPosition = route[pawnCurrentPositionIndex];
     console.log("pawn position: " + pawnCurrentPosition);
 
-    var pawnNextPosition = document.getElementById(route[pawnCurrentPositionIndex + diceRoll]);
+    let pawnNextPosition = document.getElementById(route[pawnCurrentPositionIndex + diceRoll]);
     console.log("pawn next position: " + pawnNextPosition.getAttribute("id"));
     pawnNextPosition.appendChild(pawn);
     //document.getElementById(pawnCurrentPosition).removeChild(pawn);
@@ -110,9 +116,13 @@ function setPawnsition(pawnID, diceRoll) {
     console.log("pawn position : " + pawn.getAttribute("pawnsition"));
 }
 
+function onClick(event) {
+
+}
+
 function spawnPawns(connectionID) {
     
-    for (i = 1; i < 5; i++) {
+    for (let i = 1; i < 5; i++) {
         let pawn = document.createElement("IMG");
         pawn.setAttribute("pawnNumber", i);
         pawn.style.height = "32px";
@@ -143,6 +153,9 @@ function spawnPawns(connectionID) {
             pawn.id = "gp" + i;
         }
 
+        pawn.addEventListener('click', function (event) {
+            console.log(event);
+        });
         // pawn.setAttribute("onclick", "onPawnClick()");
     }
 }
