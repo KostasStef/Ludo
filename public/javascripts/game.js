@@ -90,6 +90,9 @@ function updateBoard(players) {
 
 function startGame() {
     console.log('Start Game')
+    var startGameButton = document.getElementById("startGameButton");
+    startGameButton.style.visibility = "hidden";
+    soc.send("startGame");
 }
 
 function connectToServer() {
@@ -118,8 +121,18 @@ function connectToServer() {
             document.getElementById('yourColor').innerText = 'Your color is ' + getColorName(playerColor);
         }
 
+        // console.log("fuck");
+        var dice = JSON.parse(e.data).diceRoll;
+        // console.log(dice);
+        if (dice.header === "diceRolled") {
+            var msg = dice.player;
+            console.log(msg);
+        }
+        
         // Generate all pawns based on gameState
         updateBoard(gameState.players);
+
+        
     }
 
     // document.getElementById("startGameOverlay").style.visibility = "hidden";
@@ -139,16 +152,6 @@ function endGame() {
 
 function rollTheDice() {
     soc.send("rollDice");
-
-    soc.onmessage = function (e) {
-        console.log("fuck");
-        console.log(JSON.parse(e.data).header);
-        if (JSON.parse(e.data).header === "diceRolled") {
-            var msg = JSON.parse(e.data);
-            console.log("Dice rolled " + msg.roll + "!");
-            setPawnsition("rp1", msg.roll);
-        }
-    }
 }
 
 function onClick(event) {
