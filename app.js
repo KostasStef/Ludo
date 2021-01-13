@@ -33,6 +33,8 @@ const server = http.createServer(app).listen(port);
 const wss = new websocket.Server({server});
 let websockets = {}; //property: websocket, value: game
 
+let playerColors = ['r', 'g', 'y', 'b']
+let currentPlayerColor = '';
 let gameConnections = [];
 let games = [];
 let gameNumber = 1;
@@ -43,9 +45,14 @@ wss.on("connection", function connection(ws) {
     let con = ws;
 
     currentGamePlayer++;
+    currentPlayerColor = playerColors.splice(0,1)[0]
+
+    console.log('++++', playerColors);
 
     if (currentGamePlayer > 4) {
         currentGamePlayer = 1;
+        playerColors = ['r', 'g', 'y', 'b']
+
         gameNumber++;
     }
 
@@ -57,12 +64,12 @@ wss.on("connection", function connection(ws) {
         currGame = games.find(item => item.id === gameNumber);
         currGame.players.push({
             id: currPlayerId,
-            color: config.playerColors[currentGamePlayer],
+            color: currentPlayerColor,
             score: 0,
             hasTurn: false,
-            pawns: helpers.buildPlayersArray(currentGamePlayer)
+            pawns: helpers.buildPlayersArray(currentPlayerColor)
         });
-        console.log('Existing Game:\n', JSON.stringify(games, null, 2));
+        // console.log('Existing Game:\n', JSON.stringify(games, null, 2));
     } else {
         // this is a new game
         currGame.id = gameNumber;
@@ -70,13 +77,13 @@ wss.on("connection", function connection(ws) {
         currGame.players = [];
         currGame.players.push({
             id: currPlayerId,
-            color: config.playerColors[currentGamePlayer],
+            color: currentPlayerColor,
             score: 0,
             hasTurn: true,
-            pawns: helpers.buildPlayersArray(currentGamePlayer)
+            pawns: helpers.buildPlayersArray(currentPlayerColor)
         });
         games.push(currGame);
-        console.log('games:', JSON.stringify(games, null, 2));
+        // console.log('games:', JSON.stringify(games, null, 2));
     }
 
     connectionID = gameNumber + ':' + currPlayerId;
@@ -137,6 +144,7 @@ wss.on("connection", function connection(ws) {
         const playerId = con.id.split(':')[1];
 
         if (games.find(item => item.id === gameId)) {
+            playerColors.push(games.find(item => item.id === gameId).players.find(p => p.id === playerId).color);
             if (games.find(item => item.id === gameId).players.length === 1) {
                 // this is the last player leaving the game
                 // remove the whole game object from games
@@ -151,8 +159,8 @@ wss.on("connection", function connection(ws) {
         } else {
             console.log('Game Id: ' + gameId + ' not found');
         }
-        console.log(JSON.stringify(games, null, 2));
+        currentGamePlayer--;
+
         console.log("Connection closed.");
-        connectionID--;
     })
 })
