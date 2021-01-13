@@ -3,6 +3,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+.bodyback {
+    background-color: #2c3e50;
+}
 .container {
     width: 600px;
     height: 600px;
@@ -44,19 +47,34 @@
 }
 /*color*/
 .green {
-    background-color: green;
+    background-color: #27ae60;
 }
 .red {
-    background-color: red;
+    background-color: #c0392b;
 }
 .blue {
-    background-color: blue;
+    background-color: #2980b9;
 }
 .yellow {
-    background-color: yellow;
+    background-color: #f39c12;
+}
+.redBlue {
+    background: linear-gradient(45deg, #c0392b 50%, #2980b9 50%);;
+}
+.redGreen {
+    background: linear-gradient(315deg, #c0392b 50%, #27ae60 50%);
+}
+.yellowBlue {
+    background: linear-gradient(315deg, #2980b9 50%, #f39c12 50%);
+}
+.yellowGreen {
+    background: linear-gradient(45deg, #27ae60 50%, #f39c12 50%);;
+}
+.allColors {
+    background: conic-gradient(from -45deg at 50% 50%, #27ae60 0deg, #f39c12 0deg, #f39c12 90deg, #2980b9 90deg, #2980B9 180deg, #C0392B 180deg, #C0392B 270deg, #27ae60 270deg, #27ae60 360deg, #F39C12 360deg);
 }
 .white {
-    background-color: white;
+    background-color: #ecf0f1;
 }
 .row1-col1-child,
 .row1-col3-child,
@@ -86,12 +104,22 @@
     width: 33.33%;
     height: 16.667%;
     float: left;
-    border: 1px solid black;
 }
 .row2-col1>div,
 .row2-col3>div {
     height: 33.33%;
     width: 16.667%;
     float: left;
-    border: 1px solid black;
+}
+.brdr {
+    border: 0.01em solid black;
+}
+.text-white {
+    color: #ecf0f1;
+}
+.text-center {
+    text-align: center;
+}
+.pt {
+    padding-top: 0.5em;
 }
