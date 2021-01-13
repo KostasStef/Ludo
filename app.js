@@ -41,49 +41,48 @@ let gameNumber = 1;
 let currentGamePlayer = 0;
 let connectionID = ''; //each websocket receives a unique ID
 
-function setPawnsition(pawnID, diceRoll) {
-    let pawn = document.getElementById(pawnID);
-    let pawnNumber = pawn.getAttribute("pawnNumber");
+// function setPawnsition(pawnID, diceRoll) {
+//     let pawn = document.getElementById(pawnID);
+//     let pawnNumber = pawn.getAttribute("pawnNumber");
 
-    let redRoute = ["rh" + pawnNumber, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-        22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-        50, 51, "r1", "r2", "r3", "r4", "r5", "rc1"];
+//     let redRoute = ["rh" + pawnNumber, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+//         22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+//         50, 51, "r1", "r2", "r3", "r4", "r5", "rc1"];
 
-    let greenRoute = ["gh" + pawnNumber, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-        32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        11, 12, "g1", "g2", "g3", "g4", "g5", "gc1"];
+//     let greenRoute = ["gh" + pawnNumber, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+//         32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+//         11, 12, "g1", "g2", "g3", "g4", "g5", "gc1"];
 
-    let yellowRoute = ["yh" + pawnNumber, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46,
-        47, 48, 49, 50, 51, 52, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-        24, 25, "y1", "y2", "y3", "y4", "y5", "yc1"];
+//     let yellowRoute = ["yh" + pawnNumber, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46,
+//         47, 48, 49, 50, 51, 52, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+//         24, 25, "y1", "y2", "y3", "y4", "y5", "yc1"];
 
-    let blueRoute = ["bh" + pawnNumber, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
-        37, 38, "b1", "b2", "b3", "b4", "b5", "bc1"];
+//     let blueRoute = ["bh" + pawnNumber, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+//         11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+//         37, 38, "b1", "b2", "b3", "b4", "b5", "bc1"];
 
-    let route = [];
+//     let route = [];
 
-    if (connectionID === 1) route = redRoute;
-    else if (connectionID === 2) route = greenRoute;
-    else if (connectionID === 3) route = yellowRoute;
-    else if (connectionID === 4) route = blueRoute;
+//     if (connectionID === 1) route = redRoute;
+//     else if (connectionID === 2) route = greenRoute;
+//     else if (connectionID === 3) route = yellowRoute;
+//     else if (connectionID === 4) route = blueRoute;
 
-    console.log(route.toString());
+//     console.log(route.toString());
 
-    let pawnCurrentPositionIndex = route.indexOf(pawn.getAttribute("pawnsition"));
-    if (pawnCurrentPositionIndex < 0)
-        pawnCurrentPositionIndex = route.indexOf(parseInt(pawn.getAttribute("pawnsition")));
-    console.log("pawn index: " + pawnCurrentPositionIndex);
-    let pawnCurrentPosition = route[pawnCurrentPositionIndex];
-    console.log("pawn position: " + pawnCurrentPosition);
+//     let pawnCurrentPositionIndex = route.indexOf(pawn.getAttribute("pawnsition"));
+//     if (pawnCurrentPositionIndex < 0)
+//         pawnCurrentPositionIndex = route.indexOf(parseInt(pawn.getAttribute("pawnsition")));
+//     console.log("pawn index: " + pawnCurrentPositionIndex);
+//     let pawnCurrentPosition = route[pawnCurrentPositionIndex];
+//     console.log("pawn position: " + pawnCurrentPosition);
 
-    let pawnNextPosition = document.getElementById(route[pawnCurrentPositionIndex + diceRoll]);
-    console.log("pawn next position: " + pawnNextPosition.getAttribute("id"));
-    pawnNextPosition.appendChild(pawn);
-    //document.getElementById(pawnCurrentPosition).removeChild(pawn);
-    pawn.setAttribute("pawnsition", pawnNextPosition.getAttribute("id"));
-    console.log("pawn position : " + pawn.getAttribute("pawnsition"));
-}
+//     let pawnNextPosition = document.getElementById(route[pawnCurrentPositionIndex + diceRoll]);
+//     console.log("pawn next position: " + pawnNextPosition.getAttribute("id"));
+//     pawnNextPosition.appendChild(pawn);
+//     pawn.setAttribute("pawnsition", pawnNextPosition.getAttribute("id"));
+//     console.log("pawn position : " + pawn.getAttribute("pawnsition"));
+// }
 
 wss.on("connection", function connection(ws) {
     let con = ws;
@@ -119,6 +118,7 @@ wss.on("connection", function connection(ws) {
         // this is a new game
         currGame.id = gameNumber;
         currGame.hasStarted = false;
+        currGame.diceRoll = {};
         currGame.players = [];
         currGame.players.push({
             id: currPlayerId,
@@ -157,12 +157,40 @@ wss.on("connection", function connection(ws) {
         // con.send("Hello from the server!");
     });
 
-    // fs.writeFile("./public/server.txt", JSON.stringify(roll), 'utf8', (err) => {
-    //     if (err)
-    //         console.log('Error writing to file: ${err}');
-    //     else 
-    //         console.log('Written successfully to file');
-    // });
+    con.on("message", function incoming(message) {        
+        if (message === "startGame") {
+            if (currGame.players < 2)
+                return;
+
+            const gameId = parseInt(con.id.split(':')[0]);
+            const playerId = con.id.split(':')[1];
+
+            let randomRoll = (min = 0, max = 4) => {
+                let roll = Math.random() * (max - min) + min;
+
+                return Math.round(roll);
+            }
+
+            var randomPlayer = currGame.players[randomRoll(0, currGame.players.length-1)];
+            currGame.hasStarted = true;
+            randomPlayer.hasTurn = true;
+        }
+    });
+
+    con.on("message", function incoming(message){
+        let playerId = parseInt(con.id.split(':')[1]);
+        let player = currGame.players.find(p => p.id === playerId);
+        console.log(JSON.stringify(player, null, 2));
+        // let playerColor = player.;
+
+        // if (player.hasTurn) {
+        //     // console.log("It's your turn to play, " + playerColor + "!");
+        // } else {
+        //     console.log("Suck my butt");
+        //     // console.log("not your turn faggot: " + playerColor + "!");
+        //     console.log("Very nice, how much?");
+        // }
+    });
 
     con.on("message", function incoming(message) {
         console.log(con.id);
@@ -172,15 +200,21 @@ wss.on("connection", function connection(ws) {
 
                 return Math.round(roll);
             }
-            let diceRoll = randomRoll(1, 6);
-            console.log("number rolled: " + diceRoll + "!");
+            numberRolled = randomRoll(1, 6);
+            console.log("number rolled: " + currGame.diceRoll + "!");
+
+            const gameId = parseInt(con.id.split(':')[0]);
+            const playerId = con.id.split(':')[1];
+
             let roll = {
                 header: "diceRolled",
-                roll: diceRoll
+                player: currGame.players.find(p => p.id === playerId).color + " has rolled: " + numberRolled + "!",
+                roll: numberRolled
             };
 
+            currGame.diceRoll = roll;
 
-            con.send(JSON.stringify(roll));
+            helpers.broadcastGameState(gameConnections, gameId, currGame);
         }
 
     });
@@ -199,7 +233,7 @@ wss.on("connection", function connection(ws) {
                 let players = games.find(item => item.id === gameId).players;
                 if (players.find(item => item.id === playerId)) {
                     games.find(item => item.id === gameId).players.splice(players.findIndex(item => item.id === playerId), 1);
-                    helpers.broadcastGameState(gameConnections, gameNumber, currGame);
+                    helpers.broadcastGameState(gameConnections, gameId, currGame);
                 }
             }
         } else {
