@@ -1,23 +1,23 @@
 const config = require('./config');
 
 module.exports = {
-    buildPlayersArray: function (currentGamePlayer) {
+    buildPlayersArray: function (playerColor) {
         return [
             {
-                id: config.playerColors[currentGamePlayer] + '1',
-                position: config.playerColors[currentGamePlayer] + 'h1'
+                id: playerColor + 'p1',
+                position: playerColor + 'h1'
             },
             {
-                id: config.playerColors[currentGamePlayer] + '2',
-                position: config.playerColors[currentGamePlayer] + 'h2'
+                id: playerColor + 'p2',
+                position: playerColor + 'h2'
             },
             {
-                id: config.playerColors[currentGamePlayer] + '3',
-                position: config.playerColors[currentGamePlayer] + 'h3'
+                id: playerColor + 'p3',
+                position: playerColor + 'h3'
             },
             {
-                id: config.playerColors[currentGamePlayer] + '4',
-                position: config.playerColors[currentGamePlayer] + 'h4'
+                id: playerColor + 'p4',
+                position: playerColor + 'h4'
             },
         ];
     },
