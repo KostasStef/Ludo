@@ -36,9 +36,11 @@ function updateBoard(players) {
     ]
     for (let i = 0; i < allPawnIds.length; i++) {
         const element = document.getElementById(allPawnIds[i]);
+        // console.log(element);
         if (element) {
             for (let j = 0; j < players.length; j++) {
-                if (!players[j].pawns.find(p => p.id === allPawnIds[i])) {
+                if (!players[j].pawns.find(p => p.id === allPawnIds[i]) && document.getElementById(allPawnIds[i]) != null) {
+                    // console.log(document.getElementById(allPawnIds[i]));
                     document.getElementById(allPawnIds[i]).remove();
                 }
             }
