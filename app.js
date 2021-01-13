@@ -45,9 +45,6 @@ wss.on("connection", function connection(ws) {
     let con = ws;
 
     currentGamePlayer++;
-    currentPlayerColor = playerColors.splice(0,1)[0]
-
-    console.log('++++', playerColors);
 
     if (currentGamePlayer > 4) {
         currentGamePlayer = 1;
@@ -55,6 +52,10 @@ wss.on("connection", function connection(ws) {
 
         gameNumber++;
     }
+
+    currentPlayerColor = playerColors.splice(0,1)[0]
+
+    console.log('++++', playerColors);
 
     let currGame = {};
     let currPlayerId = v4();
@@ -127,7 +128,7 @@ wss.on("connection", function connection(ws) {
 
                 return Math.round(roll);
             }
-            var diceRoll = randomRoll(1, 6);
+            let diceRoll = randomRoll(1, 6);
             console.log("number rolled: " + diceRoll + "!");
             let roll = {
                 header: "diceRolled",
