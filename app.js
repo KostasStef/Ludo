@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const config = require('./config');
 const helpers = require('./helpers');
-const {v4} = require('uuid');
+const {v4} = require('uuid'); //TA
 
 const websocket = require("ws");
 
@@ -40,6 +40,50 @@ let games = [];
 let gameNumber = 1;
 let currentGamePlayer = 0;
 let connectionID = ''; //each websocket receives a unique ID
+
+function setPawnsition(pawnID, diceRoll) {
+    let pawn = document.getElementById(pawnID);
+    let pawnNumber = pawn.getAttribute("pawnNumber");
+
+    let redRoute = ["rh" + pawnNumber, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+        22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+        50, 51, "r1", "r2", "r3", "r4", "r5", "rc1"];
+
+    let greenRoute = ["gh" + pawnNumber, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+        32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        11, 12, "g1", "g2", "g3", "g4", "g5", "gc1"];
+
+    let yellowRoute = ["yh" + pawnNumber, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46,
+        47, 48, 49, 50, 51, 52, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+        24, 25, "y1", "y2", "y3", "y4", "y5", "yc1"];
+
+    let blueRoute = ["bh" + pawnNumber, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+        37, 38, "b1", "b2", "b3", "b4", "b5", "bc1"];
+
+    let route = [];
+
+    if (connectionID === 1) route = redRoute;
+    else if (connectionID === 2) route = greenRoute;
+    else if (connectionID === 3) route = yellowRoute;
+    else if (connectionID === 4) route = blueRoute;
+
+    console.log(route.toString());
+
+    let pawnCurrentPositionIndex = route.indexOf(pawn.getAttribute("pawnsition"));
+    if (pawnCurrentPositionIndex < 0)
+        pawnCurrentPositionIndex = route.indexOf(parseInt(pawn.getAttribute("pawnsition")));
+    console.log("pawn index: " + pawnCurrentPositionIndex);
+    let pawnCurrentPosition = route[pawnCurrentPositionIndex];
+    console.log("pawn position: " + pawnCurrentPosition);
+
+    let pawnNextPosition = document.getElementById(route[pawnCurrentPositionIndex + diceRoll]);
+    console.log("pawn next position: " + pawnNextPosition.getAttribute("id"));
+    pawnNextPosition.appendChild(pawn);
+    //document.getElementById(pawnCurrentPosition).removeChild(pawn);
+    pawn.setAttribute("pawnsition", pawnNextPosition.getAttribute("id"));
+    console.log("pawn position : " + pawn.getAttribute("pawnsition"));
+}
 
 wss.on("connection", function connection(ws) {
     let con = ws;
@@ -138,6 +182,7 @@ wss.on("connection", function connection(ws) {
 
             con.send(JSON.stringify(roll));
         }
+
     });
 
     con.on("close", function (code) {
