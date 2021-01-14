@@ -188,6 +188,11 @@ wss.on("connection", function connection(ws) {
 
             game.hasStarted = true;
 
+            var randomPlayer = currGame.players[randomRoll(0, currGame.players.length-1)];
+            currGame.hasStarted = true;
+            randomPlayer.hasTurn = true;
+        }
+    });
 
             // games.find(g => g.id === gameId).find(p => p.id === playerId).hasTurn = true;
 
@@ -198,19 +203,55 @@ wss.on("connection", function connection(ws) {
             let randomRoll = (min = 1, max = 6) => {
                 return Math.round(Math.random() * (max - min) + min);
             }
+            numberRolled = randomRoll(1, 6);
+            // console.log("number rolled: " + currGame.diceRoll + "!");
 
-            let numberRolled = randomRoll(1, 6);
-            console.log(game.find(p => p.id === playerId).color + " rolled: " + game.diceRoll);
-
-            game.diceRoll = {
+            const gameId = parseInt(con.id.split(':')[0]);
+            const playerId = con.id.split(':')[1];
+            const playerColor = currGame.players.find(p => p.id === playerId).color;
+            let roll = {
                 header: "diceRolled",
-                player: game.players.find(p => p.id === playerId).color,
+                player: playerColor + " has rolled: " + numberRolled + "!",
+                playerColor: playerColor,
                 roll: numberRolled
             };
 
-            helpers.broadcastGameState(gameConnections, gameId, game);
+            currGame.diceRoll = roll;
+
+            // let player = currGame.players.find(p => p.id === playerId);
+            // console.log(player.pawns);
+            // pawns[0]. pawns[1], pawns[2], pawns[3].
+
+            helpers.broadcastGameState(gameConnections, gameId, currGame);
+
         }
 
+    });
+
+    con.on("message", function incoming(message) {
+        if (message.includes("movedPawn")) {
+            var playerId = con.id.split(':')[1];
+            var player = currGame.players.find(p => p.id === playerId);
+            var playerColor = player.color;
+            var rolledDice = currGame.diceRoll.roll;
+            // console.log("movedpawn");
+
+            if(message.includes(playerColor)) {
+                var thisPawnId = message.substring(10);
+                let thisPawn = player.pawns.find(p => p.id === thisPawnId);
+                let pawnSition = thisPawn.position;
+                let pawnIndex = thisPawn.pawnRoute.findIndex(index => index === pawnSition);
+
+                if((pawnIndex + rolledDice)<thisPawn.pawnRoute.length) {
+
+                    var newPawnSition = thisPawn.pawnRoute[pawnIndex + rolledDice];
+                    // console.log(newPawnSition);
+                    player.pawns.find(p => p.id === thisPawnId).position = newPawnSition;
+
+                }
+                // console.log(player.pawns.find(p => p.id === thisPawnId).position);
+            }
+        }
         // ———————————————————— BROADCAST GAME-STATE  ————————————————————
         helpers.broadcastGameState(gameConnections, gameId, game);
         gameNumber++;
@@ -220,48 +261,6 @@ wss.on("connection", function connection(ws) {
         });
         playerColors = ['r', 'g', 'y', 'b'];
     });
-
-    // con.on("message", function incoming(message) {
-    //     let playerId = parseInt(con.id.split(':')[1]);
-    //     let player = currGame.players.find(p => p.id === playerId);
-    //     console.log(JSON.stringify(player, null, 2));
-    //     // let playerColor = player.;
-    //
-    //     // if (player.hasTurn) {
-    //     //     // console.log("It's your turn to play, " + playerColor + "!");
-    //     // } else {
-    //     //     console.log("Suck my butt");
-    //     //     // console.log("not your turn faggot: " + playerColor + "!");
-    //     //     console.log("Very nice, how much?");
-    //     // }
-    // });
-
-    // con.on("message", function incoming(message) {
-    //     console.log(con.id);
-    //     if (message === "rollDice") {
-    //         let randomRoll = (min = 1, max = 6) => {
-    //             let roll = Math.random() * (max - min) + min;
-    //
-    //             return Math.round(roll);
-    //         }
-    //         let numberRolled = randomRoll(1, 6);
-    //         console.log("number rolled: " + currGame.diceRoll);
-    //
-    //         const gameId = parseInt(con.id.split(':')[0]);
-    //         const playerId = con.id.split(':')[1];
-    //
-    //         let roll = {
-    //             header: "diceRolled",
-    //             player: currGame.players.find(p => p.id === playerId).color + " has rolled: " + numberRolled + "!",
-    //             roll: numberRolled
-    //         };
-    //
-    //         currGame.diceRoll = roll;
-    //
-    //         helpers.broadcastGameState(gameConnections, gameId, currGame);
-    //     }
-    //
-    // });
 
     con.on("close", function (code) {
         const gameId = parseInt(con.id.split(':')[0]);
