@@ -28,7 +28,7 @@ module.exports = {
 
     broadcastGameState: function (gameConnections, gameNumber, currGame) {
         // console.log("currGame" + JSON.stringify(currGame, null, 2));
-        console.log("GameId: " + currGame.id + ", Players = " + JSON.stringify(currGame.players, null, 2));
+        // console.log("GameId: " + currGame.id + ", Players = " + JSON.stringify(currGame.players, null, 2));
         if (gameConnections.find(item => item.gameId === gameNumber)) {
             let currGameConnections = gameConnections.find(item => item.gameId === gameNumber);
             for (let i = 0; i < currGameConnections.connections.length; i++) {

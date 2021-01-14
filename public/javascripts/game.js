@@ -114,7 +114,6 @@ function connectToServer() {
     soc = socket;
     let gameState;
     //var diceRoll;
-    var ArePawnsAvailable;
 
     socket.onmessage = function (e) {
         gameState = JSON.parse(e.data);
@@ -137,9 +136,9 @@ function connectToServer() {
             }
         }
 
-        // console.log("fuck");
+        console.log("fuck");
         let dice = JSON.parse(e.data).diceRoll;
-        // console.log(dice);
+        console.log(dice);
         if (dice.header === "diceRolled") {
             let msg = dice.player;
             //diceRoll = dice.roll;
@@ -182,16 +181,21 @@ function endGame() {
     window.location.href = './';
 }
 
+var ArePawnsAvailable;
+
 function pawnsAvailable(playerColor) {
     document.getElementById(playerColor + "p1").addEventListener("click", setPawn(playerColor + "p1"));
     document.getElementById(playerColor + "p2").addEventListener("click", setPawn(playerColor + "p2"));
     document.getElementById(playerColor + "p3").addEventListener("click", setPawn(playerColor + "p3"));
     document.getElementById(playerColor + "p4").addEventListener("click", setPawn(playerColor + "p4"));
     ArePawnsAvailable = true;
+    console.log(ArePawnsAvailable);
 }
 
 function setPawn(id) {
+    console.log("the value of pawns is: " + ArePawnsAvailable);
     return function() {
+        console.log("the value of pawns is: " + ArePawnsAvailable);
         if(ArePawnsAvailable){
             console.log("I just sent a message to server with: " + id);
             soc.send("movedPawn " + id);
