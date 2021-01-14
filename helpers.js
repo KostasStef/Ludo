@@ -5,19 +5,23 @@ module.exports = {
         return [
             {
                 id: playerColor + 'p1',
-                position: playerColor + 'h1'
+                position: playerColor + 'h1',
+                pawnRoute: config.positions(playerColor, 1)
             },
             {
                 id: playerColor + 'p2',
-                position: playerColor + 'h2'
+                position: playerColor + 'h2',
+                pawnRoute: config.positions(playerColor, 2)
             },
             {
                 id: playerColor + 'p3',
-                position: playerColor + 'h3'
+                position: playerColor + 'h3',
+                pawnRoute: config.positions(playerColor, 3)
             },
             {
                 id: playerColor + 'p4',
-                position: playerColor + 'h4'
+                position: playerColor + 'h4',
+                pawnRoute: config.positions(playerColor, 4)
             },
         ];
     },

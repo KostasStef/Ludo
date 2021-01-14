@@ -201,22 +201,54 @@ wss.on("connection", function connection(ws) {
                 return Math.round(roll);
             }
             numberRolled = randomRoll(1, 6);
-            console.log("number rolled: " + currGame.diceRoll + "!");
+            // console.log("number rolled: " + currGame.diceRoll + "!");
 
             const gameId = parseInt(con.id.split(':')[0]);
             const playerId = con.id.split(':')[1];
-
+            const playerColor = currGame.players.find(p => p.id === playerId).color;
             let roll = {
                 header: "diceRolled",
-                player: currGame.players.find(p => p.id === playerId).color + " has rolled: " + numberRolled + "!",
+                player: playerColor + " has rolled: " + numberRolled + "!",
+                playerColor: playerColor,
                 roll: numberRolled
             };
 
             currGame.diceRoll = roll;
 
+            // let player = currGame.players.find(p => p.id === playerId);
+            // console.log(player.pawns);
+            // pawns[0]. pawns[1], pawns[2], pawns[3].
+
             helpers.broadcastGameState(gameConnections, gameId, currGame);
+
         }
 
+    });
+
+    con.on("message", function incoming(message) {
+        if (message.includes("movedPawn")) {
+            var playerId = con.id.split(':')[1];
+            var player = currGame.players.find(p => p.id === playerId);
+            var playerColor = player.color;
+            var rolledDice = currGame.diceRoll.roll;
+            // console.log("movedpawn");
+            
+            if(message.includes(playerColor)) {
+                var thisPawnId = message.substring(10);
+                let thisPawn = player.pawns.find(p => p.id === thisPawnId);
+                let pawnSition = thisPawn.position;
+                let pawnIndex = thisPawn.pawnRoute.findIndex(index => index === pawnSition);
+
+                if((pawnIndex + rolledDice)<thisPawn.pawnRoute.length) {
+                    
+                    var newPawnSition = thisPawn.pawnRoute[pawnIndex + rolledDice];
+                    // console.log(newPawnSition);
+                    player.pawns.find(p => p.id === thisPawnId).position = newPawnSition;
+                    
+                }
+                // console.log(player.pawns.find(p => p.id === thisPawnId).position);
+            }
+        }    
     });
 
     con.on("close", function (code) {

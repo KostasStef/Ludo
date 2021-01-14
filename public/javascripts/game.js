@@ -72,6 +72,8 @@ function updateBoard(players) {
 
         let pawns = players[j].pawns
         for (let i = 0; i < pawns.length; i++) {
+            var pawnId = pawns[i].id;
+            if (!document.getElementById(pawnId)) {
             // console.log(pawns[i]);
             let pawn = document.createElement("IMG");
             pawn.style.height = "32px";
@@ -80,9 +82,12 @@ function updateBoard(players) {
             pawn.style.top = "0px";
             pawn.style.left = "0px";
             pawn.src = imgSrc;
-            pawn.id = pawns[i].id;
-            if (!document.getElementById(pawn.id)) {
-                document.getElementById(pawns[i].position).appendChild(pawn);
+            pawn.id = pawnId;
+            document.getElementById(pawns[i].position).appendChild(pawn);
+            }
+            else {
+            let pawn = document.getElementById(pawnId);
+            document.getElementById(pawns[i].position).appendChild(pawn);
             }
         }
     }
@@ -107,9 +112,12 @@ function connectToServer() {
     // };
 
     soc = socket;
+    let gameState;
+    //var diceRoll;
+    var ArePawnsAvailable;
 
     socket.onmessage = function (e) {
-        let gameState = JSON.parse(e.data);
+        gameState = JSON.parse(e.data);
         console.log(gameState);
 
         if (playerColor === '') {
@@ -126,8 +134,12 @@ function connectToServer() {
         // console.log(dice);
         if (dice.header === "diceRolled") {
             var msg = dice.player;
-            console.log(msg);
+            //diceRoll = dice.roll;
+            console.log("message: \n " + msg);
+            pawnsAvailable(dice.playerColor);
         }
+
+
         
         // Generate all pawns based on gameState
         updateBoard(gameState.players);
@@ -149,6 +161,29 @@ function endGame() {
 
     window.location.href = './';
 }
+
+function pawnsAvailable(playerColor) {
+    document.getElementById(playerColor + "p1").addEventListener("click", setPawn(playerColor + "p1"));
+    document.getElementById(playerColor + "p2").addEventListener("click", setPawn(playerColor + "p2"));
+    document.getElementById(playerColor + "p3").addEventListener("click", setPawn(playerColor + "p3"));
+    document.getElementById(playerColor + "p4").addEventListener("click", setPawn(playerColor + "p4"));
+    ArePawnsAvailable = true;
+}
+
+function setPawn(id) {
+    return function() {
+        if(ArePawnsAvailable){
+            console.log("I just sent a message to server with: " + id);
+            soc.send("movedPawn " + id);
+
+            document.getElementById(playerColor + "p1").removeEventListener("click", setPawn(playerColor + "p1"));
+            document.getElementById(playerColor + "p2").removeEventListener("click", setPawn(playerColor + "p2"));
+            document.getElementById(playerColor + "p3").removeEventListener("click", setPawn(playerColor + "p3"));
+            document.getElementById(playerColor + "p4").removeEventListener("click", setPawn(playerColor + "p4"));
+            ArePawnsAvailable = false;
+        }
+    }
+  }
 
 function rollTheDice() {
     soc.send("rollDice");
