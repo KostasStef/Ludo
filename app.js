@@ -188,9 +188,19 @@ wss.on("connection", function connection(ws) {
 
             game.hasStarted = true;
 
+            let randomRoll = (min = 1, max = 6) => {
+                return Math.round(Math.random() * (max - min) + min);
+            }
             var randomPlayer = currGame.players[randomRoll(0, currGame.players.length-1)];
             currGame.hasStarted = true;
             randomPlayer.hasTurn = true;
+
+            gameNumber++;
+            gamesAndPlayers.push({
+                gameId: gameNumber,
+                currNumberOfPlayers: 0
+            });
+            playerColors = ['r', 'g', 'y', 'b'];
         }
 
         // ———————————————————— ROLL DICE ————————————————————
@@ -217,9 +227,10 @@ wss.on("connection", function connection(ws) {
             // console.log(player.pawns);
             // pawns[0]. pawns[1], pawns[2], pawns[3].
 
-            helpers.broadcastGameState(gameConnections, gameId, currGame);
-
         }
+
+        // ———————————————————— BROADCAST GAME-STATE  ————————————————————
+        helpers.broadcastGameState(gameConnections, gameId, game);
     });
 
     con.on("message", function incoming(message) {
@@ -246,14 +257,8 @@ wss.on("connection", function connection(ws) {
                 // console.log(player.pawns.find(p => p.id === thisPawnId).position);
             }
         }
-        // ———————————————————— BROADCAST GAME-STATE  ————————————————————
-        helpers.broadcastGameState(gameConnections, gameId, game);
-        gameNumber++;
-        gamesAndPlayers.push({
-            gameId: gameNumber,
-            currNumberOfPlayers: 0
-        });
-        playerColors = ['r', 'g', 'y', 'b'];
+
+
     });
 
     con.on("close", function (code) {
