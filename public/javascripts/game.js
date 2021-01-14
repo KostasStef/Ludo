@@ -1,6 +1,7 @@
 let soc = null;
 let connectionID = null;
 let playerColor = '';
+let isHost = null;
 
 function getColorName(code) {
     let colorName = '';
@@ -89,9 +90,8 @@ function updateBoard(players) {
 }
 
 function startGame() {
-    console.log('Start Game')
-    var startGameButton = document.getElementById("startGameButton");
-    startGameButton.style.visibility = "hidden";
+    console.log('Start Game');
+    document.getElementById("startGameButton").style.visibility = "hidden";
     soc.send("startGame");
 }
 
@@ -115,20 +115,42 @@ function connectToServer() {
         if (playerColor === '') {
             // First time receiving the gameState. This happens when
             // connecting with the server for the first time.
+
             // This is going to be the user's color
             playerColor = gameState.players[gameState.players.length-1].color;
             console.log('Player color is: ' + playerColor);
             document.getElementById('yourColor').innerText = 'Your color is ' + getColorName(playerColor);
+
+            // This determines if the user is the host
+            isHost = gameState.players[gameState.players.length-1].isHost;
+            console.log(playerColor + " is host = " + isHost);
+            if (isHost && gameState.players.length > 1) {
+                document.getElementById('startGameButton').style.visibility = 'visible';
+            }
         }
 
         // console.log("fuck");
-        var dice = JSON.parse(e.data).diceRoll;
+        let dice = JSON.parse(e.data).diceRoll;
         // console.log(dice);
         if (dice.header === "diceRolled") {
-            var msg = dice.player;
+            let msg = dice.player;
             console.log(msg);
         }
-        
+
+        let player = gameState.players.find(p => p.color === playerColor);
+
+        if (player.isHost && !gameState.hasStarted && gameState.players.length > 1) {
+            isHost = true;
+            document.getElementById('startGameButton').style.visibility = 'visible';
+            console.log(playerColor + " is the new host.");
+        } else {
+            document.getElementById('startGameButton').style.visibility = 'hidden';
+        }
+
+        if (gameState.hasStarted && player.hasTurn) {
+            document.getElementById('rollTheDice').style.visibility = 'visible';
+        }
+
         // Generate all pawns based on gameState
         updateBoard(gameState.players);
 
