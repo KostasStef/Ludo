@@ -192,11 +192,6 @@ wss.on("connection", function connection(ws) {
             currGame.hasStarted = true;
             randomPlayer.hasTurn = true;
         }
-    });
-
-            // games.find(g => g.id === gameId).find(p => p.id === playerId).hasTurn = true;
-
-        }
 
         // ———————————————————— ROLL DICE ————————————————————
         else if (message === "rollDice") {
@@ -225,7 +220,6 @@ wss.on("connection", function connection(ws) {
             helpers.broadcastGameState(gameConnections, gameId, currGame);
 
         }
-
     });
 
     con.on("message", function incoming(message) {
@@ -296,5 +290,6 @@ wss.on("connection", function connection(ws) {
         currentGamePlayer--;
 
         console.log("Connection closed.");
-    })
-})
+    });
+
+});
