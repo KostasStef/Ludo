@@ -57,15 +57,15 @@ function nextPlayer(playerHasTurn, numberOfPlayers) {
     return playerHasTurn;
 }
 
-function changeTurns(gameId, playerId) {
-    let numberOfPlayers = gamesAndPlayers.find(g => g.gameId === gameId).numberOfPlayers;
-    let playerHasTurn = gamesAndPlayers.find(g => g.gameId === gameId).hasTurn;
-
-    let nextPlayer = nextPlayer(playerHasTurn, numberOfPlayers);
-    gamesAndPlayers.find(g => g.gameId === gameId).hasTurn = nextPlayer;
-    games.find(g => g.id === gameId).players.find(p => p.id === playerId).hasTurn = false;
-    games.find(g => g.id === gameId).players[nextPlayer - 1].hasTurn = true;
-}
+// function changeTurns(gameId, playerId) {
+//     let numberOfPlayers = gamesAndPlayers.find(g => g.gameId === gameId).numberOfPlayers;
+//     let playerHasTurn = gamesAndPlayers.find(g => g.gameId === gameId).hasTurn;
+//
+//     let nextPlayer = nextPlayer(playerHasTurn, numberOfPlayers);
+//     gamesAndPlayers.find(g => g.gameId === gameId).hasTurn = nextPlayer;
+//     games.find(g => g.id === gameId).players.find(p => p.id === playerId).hasTurn = false;
+//     games.find(g => g.id === gameId).players[nextPlayer - 1].hasTurn = true;
+// }
 
 wss.on("connection", function connection(ws) {
     let con = ws;
@@ -230,13 +230,23 @@ wss.on("connection", function connection(ws) {
 
             console.log("All pawns in home position = " + allPawnsInHome);
 
+            let numberOfPlayers = gamesAndPlayers.find(g => g.gameId === gameId).numberOfPlayers;
+            let playerHasTurn = gamesAndPlayers.find(g => g.gameId === gameId).hasTurn;
+
             // if all pawns are in the home positions, then change turns
             if (allPawnsInHome && numberRolled !== 6) {
                 // change turns
-                changeTurns(gameId, playerId);
-            } else if (allPawnsInHome && numberRolled === 6) {
-              // to be implemented
+                // changeTurns(gameId, playerId);
+
+                let nextPlayer = nextPlayer(playerHasTurn, numberOfPlayers);
+                gamesAndPlayers.find(g => g.gameId === gameId).hasTurn = nextPlayer;
+                games.find(g => g.id === gameId).players.find(p => p.id === playerId).hasTurn = false;
+                games.find(g => g.id === gameId).players[nextPlayer - 1].hasTurn = true;
+
             }
+            // else if (allPawnsInHome && numberRolled === 6) {
+            //   // to be implemented
+            // }
         }
 
         // ———————————————————— MOVE PAWN ————————————————————
