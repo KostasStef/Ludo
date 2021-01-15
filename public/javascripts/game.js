@@ -2,6 +2,7 @@ let soc = null;
 let connectionID = null;
 let playerColor = '';
 let isHost = null;
+let ArePawnsAvailable = false;
 
 function getColorName(code) {
     let colorName = '';
@@ -25,6 +26,15 @@ function getColorName(code) {
     return colorName;
 }
 
+function setPawn(e) {
+    let pawnId = e.path[0].id;
+    if (ArePawnsAvailable) {
+        ArePawnsAvailable = false;
+        console.log(pawnId + " was clicked.");
+        soc.send("movedPawn " + pawnId);
+    }
+}
+
 function updateBoard(players) {
 
     // Remove any pawn elements not present in the players array
@@ -37,11 +47,9 @@ function updateBoard(players) {
     ]
     for (let i = 0; i < allPawnIds.length; i++) {
         const element = document.getElementById(allPawnIds[i]);
-        // console.log(element);
         if (element) {
             for (let j = 0; j < players.length; j++) {
                 if (!players[j].pawns.find(p => p.id === allPawnIds[i]) && document.getElementById(allPawnIds[i]) != null) {
-                    // console.log(document.getElementById(allPawnIds[i]));
                     document.getElementById(allPawnIds[i]).remove();
                 }
             }
@@ -49,7 +57,6 @@ function updateBoard(players) {
     }
 
     // Add pawns from the players array
-
     for (let j = 0; j < players.length; j++) {
 
         let imgSrc = '';
@@ -73,22 +80,24 @@ function updateBoard(players) {
 
         let pawns = players[j].pawns
         for (let i = 0; i < pawns.length; i++) {
-            var pawnId = pawns[i].id;
+            let pawnId = pawns[i].id;
             if (!document.getElementById(pawnId)) {
-            // console.log(pawns[i]);
-            let pawn = document.createElement("IMG");
-            pawn.style.height = "32px";
-            pawn.style.width = "32px";
-            pawn.style.position = "relative";
-            pawn.style.top = "0px";
-            pawn.style.left = "0px";
-            pawn.src = imgSrc;
-            pawn.id = pawnId;
-            document.getElementById(pawns[i].position).appendChild(pawn);
-            }
-            else {
-            let pawn = document.getElementById(pawnId);
-            document.getElementById(pawns[i].position).appendChild(pawn);
+                let pawn = document.createElement("IMG");
+                pawn.style.height = "32px";
+                pawn.style.width = "32px";
+                pawn.style.position = "relative";
+                pawn.style.top = "0px";
+                pawn.style.left = "0px";
+                pawn.src = imgSrc;
+                pawn.id = pawnId;
+                document.getElementById(pawns[i].position).appendChild(pawn);
+
+                if (players[j].color === playerColor) {
+                    document.getElementById(pawnId).addEventListener("click", setPawn);
+                }
+            } else {
+                let pawn = document.getElementById(pawnId);
+                document.getElementById(pawns[i].position).appendChild(pawn);
             }
         }
     }
@@ -113,7 +122,6 @@ function connectToServer() {
 
     soc = socket;
     let gameState;
-    //var diceRoll;
 
     socket.onmessage = function (e) {
         gameState = JSON.parse(e.data);
@@ -124,26 +132,16 @@ function connectToServer() {
             // connecting with the server for the first time.
 
             // This is going to be the user's color
-            playerColor = gameState.players[gameState.players.length-1].color;
+            playerColor = gameState.players[gameState.players.length - 1].color;
             console.log('Player color is: ' + playerColor);
             document.getElementById('yourColor').innerText = 'Your color is ' + getColorName(playerColor);
 
             // This determines if the user is the host
-            isHost = gameState.players[gameState.players.length-1].isHost;
+            isHost = gameState.players[gameState.players.length - 1].isHost;
             console.log(playerColor + " is host = " + isHost);
             if (isHost && gameState.players.length > 1) {
                 document.getElementById('startGameButton').style.visibility = 'visible';
             }
-        }
-
-        console.log("fuck");
-        let dice = JSON.parse(e.data).diceRoll;
-        console.log(dice);
-        if (dice.header === "diceRolled") {
-            let msg = dice.player;
-            //diceRoll = dice.roll;
-            console.log("message: \n " + msg);
-            pawnsAvailable(dice.playerColor);
         }
 
         let player = gameState.players.find(p => p.color === playerColor);
@@ -158,61 +156,27 @@ function connectToServer() {
 
         if (gameState.hasStarted && player.hasTurn) {
             document.getElementById('rollTheDice').style.visibility = 'visible';
+        } else {
+            document.getElementById('rollTheDice').style.visibility = 'hidden';
+        }
+
+        let dice = gameState.diceRoll;
+        if (dice !== null && dice.playerColor === playerColor && player.hasTurn) {
+            console.log(playerColor + " has rolled " + dice.roll);
+            ArePawnsAvailable = true;
         }
 
         // Generate all pawns based on gameState
         updateBoard(gameState.players);
-
-        
     }
 
-    // document.getElementById("startGameOverlay").style.visibility = "hidden";
-    // document.getElementById("gameScreen").style.visibility = "visible";
 }
 
 function endGame() {
-    console.log("Leave game.");
-
     soc.close();
-
-    // document.getElementById("startGameOverlay").style.visibility = "visible";
-    // document.getElementById("gameScreen").style.visibility = "hidden";
-
     window.location.href = './';
 }
 
-var ArePawnsAvailable;
-
-function pawnsAvailable(playerColor) {
-    document.getElementById(playerColor + "p1").addEventListener("click", setPawn(playerColor + "p1"));
-    document.getElementById(playerColor + "p2").addEventListener("click", setPawn(playerColor + "p2"));
-    document.getElementById(playerColor + "p3").addEventListener("click", setPawn(playerColor + "p3"));
-    document.getElementById(playerColor + "p4").addEventListener("click", setPawn(playerColor + "p4"));
-    ArePawnsAvailable = true;
-    console.log(ArePawnsAvailable);
-}
-
-function setPawn(id) {
-    console.log("the value of pawns is: " + ArePawnsAvailable);
-    return function() {
-        console.log("the value of pawns is: " + ArePawnsAvailable);
-        if(ArePawnsAvailable){
-            console.log("I just sent a message to server with: " + id);
-            soc.send("movedPawn " + id);
-
-            document.getElementById(playerColor + "p1").removeEventListener("click", setPawn(playerColor + "p1"));
-            document.getElementById(playerColor + "p2").removeEventListener("click", setPawn(playerColor + "p2"));
-            document.getElementById(playerColor + "p3").removeEventListener("click", setPawn(playerColor + "p3"));
-            document.getElementById(playerColor + "p4").removeEventListener("click", setPawn(playerColor + "p4"));
-            ArePawnsAvailable = false;
-        }
-    }
-  }
-
 function rollTheDice() {
     soc.send("rollDice");
-}
-
-function onClick(event) {
-
 }

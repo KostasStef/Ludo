@@ -26,14 +26,14 @@ module.exports = {
         ];
     },
 
-    broadcastGameState: function (gameConnections, gameNumber, currGame) {
-        // console.log("currGame" + JSON.stringify(currGame, null, 2));
-        // console.log("GameId: " + currGame.id + ", Players = " + JSON.stringify(currGame.players, null, 2));
+    broadcastGameState: function (gameConnections, gameNumber, game) {
+        // console.log("game" + JSON.stringify(game, null, 2));
+        // console.log("GameId: " + game.id + ", Players = " + JSON.stringify(game.players, null, 2));
         if (gameConnections.find(item => item.gameId === gameNumber)) {
             let currGameConnections = gameConnections.find(item => item.gameId === gameNumber);
             for (let i = 0; i < currGameConnections.connections.length; i++) {
                 // console.log("Connections[i] = " + currGameConnections.connections[i]);
-                currGameConnections.connections[i].send(JSON.stringify(currGame));
+                currGameConnections.connections[i].send(JSON.stringify(game));
             }
         }
     }
