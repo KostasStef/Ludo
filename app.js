@@ -12,8 +12,6 @@ const port = process.argv[2];
 const app = express();
 
 const indexRouter = require("./routes/index");
-const {round} = require("lodash");
-
 
 let gameStats = {
     games: 0,
@@ -43,6 +41,8 @@ let gamesAndPlayers = [];
 
 let connectionID = ''; //each websocket receives a unique ID
 
+let id = 0;
+
 function nextPlayer(playerHasTurn, numberOfPlayers) {
     console.log("Player " + playerHasTurn + " has turn.");
 
@@ -57,15 +57,15 @@ function nextPlayer(playerHasTurn, numberOfPlayers) {
     return playerHasTurn;
 }
 
-// function changeTurns(gameId, playerId) {
-//     let numberOfPlayers = gamesAndPlayers.find(g => g.gameId === gameId).numberOfPlayers;
-//     let playerHasTurn = gamesAndPlayers.find(g => g.gameId === gameId).hasTurn;
-//
-//     let nextPlayer = nextPlayer(playerHasTurn, numberOfPlayers);
-//     gamesAndPlayers.find(g => g.gameId === gameId).hasTurn = nextPlayer;
-//     games.find(g => g.id === gameId).players.find(p => p.id === playerId).hasTurn = false;
-//     games.find(g => g.id === gameId).players[nextPlayer - 1].hasTurn = true;
-// }
+function changeTurns(gameId, playerId) {
+    let numberOfPlayers = gamesAndPlayers.find(g => g.gameId === gameId).numberOfPlayers;
+    let playerHasTurn = gamesAndPlayers.find(g => g.gameId === gameId).hasTurn;
+
+    let nextPlayerVar = nextPlayer(playerHasTurn, numberOfPlayers);
+    gamesAndPlayers.find(g => g.gameId === gameId).hasTurn = nextPlayerVar;
+    games.find(g => g.id === gameId).players.find(p => p.id === playerId).hasTurn = false;
+    games.find(g => g.id === gameId).players[nextPlayerVar - 1].hasTurn = true;
+}
 
 wss.on("connection", function connection(ws) {
     let con = ws;
@@ -98,6 +98,7 @@ wss.on("connection", function connection(ws) {
 
     let currGame = {};
     let currPlayerId = v4();
+    // let currPlayerId = id++;
 
     if (games.find(item => item.id === gameNumber)) {
         // game already exists
@@ -230,18 +231,10 @@ wss.on("connection", function connection(ws) {
 
             console.log("All pawns in home position = " + allPawnsInHome);
 
-            let numberOfPlayers = gamesAndPlayers.find(g => g.gameId === gameId).numberOfPlayers;
-            let playerHasTurn = gamesAndPlayers.find(g => g.gameId === gameId).hasTurn;
-
             // if all pawns are in the home positions, then change turns
             if (allPawnsInHome && numberRolled !== 6) {
                 // change turns
-                // changeTurns(gameId, playerId);
-
-                let nextPlayer = nextPlayer(playerHasTurn, numberOfPlayers);
-                gamesAndPlayers.find(g => g.gameId === gameId).hasTurn = nextPlayer;
-                games.find(g => g.id === gameId).players.find(p => p.id === playerId).hasTurn = false;
-                games.find(g => g.id === gameId).players[nextPlayer - 1].hasTurn = true;
+                changeTurns(gameId, playerId);
 
             }
             // else if (allPawnsInHome && numberRolled === 6) {
@@ -257,21 +250,35 @@ wss.on("connection", function connection(ws) {
             let pawn = player.pawns.find(p => p.id === pawnId);
             let position = pawn.position;
             let pawnIndex = pawn.pawnRoute.findIndex(index => index === position);
+            let newPawnsitionToBe;
 
             if (pawnIndex === 0 && numberRolled === 6) {
                 games.find(g => g.id === gameId).players.find(p => p.id === playerId)
                     .pawns.find(p => p.id === pawnId)
                     .position = pawn.pawnRoute[1];
 
+                
                 // set hasTurn to true to make the Roll Dice button reappear
                 // games.find(g => g.id === gameId).players.find(p => p.id === playerId).hasTurn = true;
 
             } else if (pawnIndex !== 0 && (pawnIndex + numberRolled) < pawn.pawnRoute.length) {
+                newPawnsitionToBe = games.find(g => g.id === gameId).players.find(p => p.id === playerId)
+                    .pawns.find(p => p.id === pawnId)
+                    .position;
+
+                // var isThereAnotherPawnSamePlayerSamePosition = games.find(g => g.id === gameId).players.find(p => p.id === playerId).pawns.find(p => p.position === pawn.pawnRoute[pawnIndex + numberRolled]);
+                // var isThereAnotherPawnSamePosition = games.find(g => g.id === gameId).players.forEach(player => player.pawns.find(p => p.position === pawn.pawnRoute[pawnIndex + numberRolled]));
+                
+                // if(isThereAnotherPawnSamePlayerSamePosition === null) {
+                    
+                // }
+
                 games.find(g => g.id === gameId).players.find(p => p.id === playerId)
                     .pawns.find(p => p.id === pawnId)
                     .position = pawn.pawnRoute[pawnIndex + numberRolled];
 
                 // change turns
+                changeTurns(gameId, playerId);
 
             }
 
@@ -302,7 +309,6 @@ wss.on("connection", function connection(ws) {
                     if (wasHost) {
                         games.find(item => item.id === gameId).players[0].isHost = true;
                     }
-
 
                     helpers.broadcastGameState(gameConnections, gameId, games.find(item => item.id === gameId));
                 }
