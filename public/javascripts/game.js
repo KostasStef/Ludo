@@ -44,7 +44,8 @@ function updateBoard(players) {
         'gp1', 'gp2', 'gp3', 'gp4',
         'yp1', 'yp2', 'yp3', 'yp4',
         'bp1', 'bp2', 'bp3', 'bp4',
-    ]
+    ];
+
     for (let i = 0; i < allPawnIds.length; i++) {
         const element = document.getElementById(allPawnIds[i]);
         if (element) {
@@ -127,6 +128,13 @@ function connectToServer() {
         gameState = JSON.parse(e.data);
         console.log(gameState);
 
+        if (gameState.exitCode !== null) {
+            let code = gameState.exitCode.split(':')[0];
+            let error = gameState.exitCode.split(':')[1];
+            alert("Exit code " + code + ": " + error);
+            endGame();
+        }
+
         if (playerColor === '') {
             // First time receiving the gameState. This happens when
             // connecting with the server for the first time.
@@ -154,14 +162,15 @@ function connectToServer() {
             document.getElementById('startGameButton').style.visibility = 'hidden';
         }
 
-        if (gameState.hasStarted && player.hasTurn) {
+        let dice = gameState.diceRoll;
+
+        if (gameState.hasStarted && player.hasTurn && dice.state === 'toRoll') {
             document.getElementById('rollTheDice').style.visibility = 'visible';
         } else {
             document.getElementById('rollTheDice').style.visibility = 'hidden';
         }
 
-        let dice = gameState.diceRoll;
-        if (dice !== null && dice.playerColor === playerColor && player.hasTurn) {
+        if (dice !== null && dice.playerColor === playerColor && player.hasTurn && dice.state === 'rolled') {
             console.log(playerColor + " has rolled " + dice.roll);
             ArePawnsAvailable = true;
         }
