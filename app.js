@@ -250,35 +250,44 @@ wss.on("connection", function connection(ws) {
             let pawn = player.pawns.find(p => p.id === pawnId);
             let position = pawn.position;
             let pawnIndex = pawn.pawnRoute.findIndex(index => index === position);
-            let newPawnsitionToBe;
+            let newPawnsition = pawn.pawnRoute[pawnIndex + numberRolled];
+            let isThereAnotherPawnSamePlayerSamePosition = games.find(g => g.id === gameId).players.find(p => p.id === playerId).pawns.find(p => p.position === newPawnsition);
+            let isThereAnotherPawnSamePosition = games.find(g => g.id === gameId).players.find(player => player.pawns.find(p => p.position === newPawnsition));//.pawns.find(p => p.position === newPawnsition);
+            let isThereAnotherPawnAtStartSamePlayer = games.find(g => g.id === gameId).players.find(p => p.id === playerId).pawns.find(p => p.position === pawn.pawnRoute[1]);
+            let isThereAnotherPawnAtStart = games.find(g => g.id === gameId).players.find(player => player.pawns.find(p => p.position === pawn.pawnRoute[1]))//.pawns.find(p => p.position === pawn.pawnRoute[1]);
 
             if (pawnIndex === 0 && numberRolled === 6) {
-                games.find(g => g.id === gameId).players.find(p => p.id === playerId)
-                    .pawns.find(p => p.id === pawnId)
-                    .position = pawn.pawnRoute[1];
+                if(isThereAnotherPawnAtStartSamePlayer === undefined){
+                    games.find(g => g.id === gameId).players.find(p => p.id === playerId)
+                        .pawns.find(p => p.id === pawnId)
+                        .position = pawn.pawnRoute[1];
+                    if(isThereAnotherPawnAtStart !== undefined){
+                        console.log("Pawn ["+ pawnId+ "] ate Pawn ["+isThereAnotherPawnAtStart.pawns.find(p => p.position === pawn.pawnRoute[1]).pawnId+"] at position: " + pawn.pawnRoute[1] +".");        
+                        games.find(g => g.id === gameId)
+                            .players.find(player => player.pawns
+                            .find(p => p.position === pawn.pawnRoute[1])).pawns
+                            .find(p => p.position === pawn.pawnRoute[1]).position = isThereAnotherPawnAtStart.pawns.find(p => p.position === pawn.pawnRoute[1]).pawnRoute[0];
+                    }
+                }
 
-                
                 // set hasTurn to true to make the Roll Dice button reappear
                 // games.find(g => g.id === gameId).players.find(p => p.id === playerId).hasTurn = true;
 
             } else if (pawnIndex !== 0 && (pawnIndex + numberRolled) < pawn.pawnRoute.length) {
-                newPawnsitionToBe = games.find(g => g.id === gameId).players.find(p => p.id === playerId)
-                    .pawns.find(p => p.id === pawnId)
-                    .position;
-
-                // var isThereAnotherPawnSamePlayerSamePosition = games.find(g => g.id === gameId).players.find(p => p.id === playerId).pawns.find(p => p.position === pawn.pawnRoute[pawnIndex + numberRolled]);
-                // var isThereAnotherPawnSamePosition = games.find(g => g.id === gameId).players.forEach(player => player.pawns.find(p => p.position === pawn.pawnRoute[pawnIndex + numberRolled]));
-                
-                // if(isThereAnotherPawnSamePlayerSamePosition === null) {
-                    
-                // }
-
-                games.find(g => g.id === gameId).players.find(p => p.id === playerId)
-                    .pawns.find(p => p.id === pawnId)
-                    .position = pawn.pawnRoute[pawnIndex + numberRolled];
-
+                if(isThereAnotherPawnSamePlayerSamePosition === undefined){
+                    games.find(g => g.id === gameId).players.find(p => p.id === playerId)
+                        .pawns.find(p => p.id === pawnId)
+                        .position = newPawnsition;
+                    if(isThereAnotherPawnSamePosition !== undefined){
+                        console.log("Pawn ["+ pawnId+ "] ate Pawn ["+isThereAnotherPawnSamePosition.pawns.find(p => p.position === newPawnsition).pawnId+"] at position: " + newPawnsition +".");        
+                        games.find(g => g.id === gameId).players
+                            .find(player => player.pawns
+                            .find(p => p.position === newPawnsition)).position = isThereAnotherPawnSamePosition.pawns.find(p => p.position === newPawnsition).pawnRoute[0];
+                    }
                 // change turns
                 changeTurns(gameId, playerId);
+                }
+
 
             }
 
