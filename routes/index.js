@@ -7,7 +7,7 @@ router.get("/", function (req, res) {
 });
 
 /* GET home page */
-router.get("/game", function (req, res) {
+router.get("/play", function (req, res) {
     res.sendFile("game.html", {root: "./public"});
 });
 
