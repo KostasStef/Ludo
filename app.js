@@ -7,11 +7,27 @@ const crypto = require('crypto');
 const websocket = require("ws");
 const indexRouter = require("./routes/index");
 
+const stats = require('./stats');
+
 const port = process.argv[2];
 const app = express();
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
+
+app.get("/", indexRouter);
+app.get("/play", indexRouter);
+
+const server = http.createServer(app).listen(port);
+const wss = new websocket.Server({ server });
+
+// declare essential variables
+let currentPlayerColor = '';
+let gameConnections = [];
+let games = [];
+let gameNumber = 0;
+let gamesAndPlayers = [];       // local array of objects that keeps track of each game
+let connectionID = '';          // each websocket receives a unique ID
 
 function playerCounter(arrayOfGames) {
     let number = 0;
@@ -23,40 +39,14 @@ function playerCounter(arrayOfGames) {
     return number;
 }
 
-function ongoingGames() {
-    return games.length !== 0 ? games.filter(g => g.hasStarted === true).length : 0;
+// update game stats
+function updateStats() {
+    stats.setOngoingGames(games.length !== 0 ? games.filter(g => g.hasStarted === true).length : 0);
+    stats.setCurrentlyPlaying(playerCounter(games.length !== 0 ? games.filter(g => g.hasStarted === true) : []));
+    stats.setPlayersWaiting(playerCounter(games.length !== 0 ? games.filter(g => g.hasStarted === false) : []));
 }
 
-function currentlyPlaying() {
-    return playerCounter(games.length !== 0 ? games.filter(g => g.hasStarted === true) : []);
-}
-
-function playersWaiting() {
-    return playerCounter(games.length !== 0 ? games.filter(g => g.hasStarted === false) : []);
-}
-
-app.get("/", (req, res) => {
-    res.render("splash.ejs", {
-        ongoingGames: ongoingGames(),
-        currentlyPlaying: currentlyPlaying(),
-        playersWaiting: playersWaiting()
-    });
-});
-
-app.get("/play", indexRouter);
-
-const server = http.createServer(app).listen(port);
-const wss = new websocket.Server({server});
-
-let currentPlayerColor = '';
-let gameConnections = [];
-let games = [];
-let gameNumber = 0;
-let gamesAndPlayers = [];
-
-let connectionID = ''; // each websocket receives a unique ID
-
-function nextPlayer(playerHasTurn, numberOfPlayers) {
+function getNextPlayer(playerHasTurn, numberOfPlayers) {
     if (playerHasTurn < numberOfPlayers) {
         playerHasTurn++;
     } else if (playerHasTurn === numberOfPlayers) {
@@ -69,7 +59,7 @@ function nextPlayer(playerHasTurn, numberOfPlayers) {
 function changeTurns(gameId, playerId) {
     const numberOfPlayers = games.find(g => g.id === gameId).players.length;
     const playerHasTurn = games.find(g => g.id === gameId).players.findIndex(p => p.hasTurn === true) + 1;
-    const nextPlayerVar = nextPlayer(playerHasTurn, numberOfPlayers);
+    const nextPlayerVar = getNextPlayer(playerHasTurn, numberOfPlayers);
 
     gamesAndPlayers.find(g => g.gameId === gameId).hasTurn = nextPlayerVar;
     games.find(g => g.id === gameId).players.find(p => p.id === playerId).hasTurn = false;
@@ -94,7 +84,7 @@ wss.on("connection", function connection(ws) {
 
     if (openGame) {
         gameNumber = openGame.id;
-        console.log("Open game ID: " + gameNumber);
+        // console.log("Open game ID: " + gameNumber);
     } else {
         gameNumber++;
 
@@ -159,6 +149,7 @@ wss.on("connection", function connection(ws) {
         });
     }
 
+    updateStats();
     helpers.broadcastGameState(gameConnections, gameNumber, currGame);
 
     // ———————————————————— ON MESSAGE FUNCTION ————————————————————
@@ -188,7 +179,7 @@ wss.on("connection", function connection(ws) {
             games.find(g => g.id === gameId).players.find(p => p === randomPlayer).hasTurn = true;
 
             gamesAndPlayers.find(g => g.gameId === gameId).hasTurn = game.players.findIndex(p => p.hasTurn === true) + 1;
-            console.log("Player " + gamesAndPlayers.find(g => g.gameId === gameId).hasTurn + " has turn.");
+            // console.log("Player " + gamesAndPlayers.find(g => g.gameId === gameId).hasTurn + " has turn.");
 
             games.find(g => g.id === gameId).diceRoll.state = 'toRoll';
 
@@ -204,14 +195,16 @@ wss.on("connection", function connection(ws) {
                     colors: ['r', 'g', 'y', 'b']
                 });
             }
+
+            updateStats();
         }
 
         // ———————————————————— ROLL DICE ————————————————————
         else if (message === "rollDice") {
 
             // roll the dice
-            let numberRolled = randomRoll(1, 6);
-            console.log(numberRolled);
+            // let numberRolled = randomRoll(1, 6);
+            let numberRolled = 6;
 
             // get the player's color
             const playerColor = currGame.players.find(p => p.id === playerId).color;
@@ -227,11 +220,10 @@ wss.on("connection", function connection(ws) {
             for (let i = 0; i < player.pawns.length; i++) {
                 pawnPositions.push(player.pawns[i].position);
             }
-            console.log("Pawn positions " + pawnPositions);
 
             let pawnIndex;
-            let newPawnsition;
-            let isThereAnotherPawnSamePlayerSamePosition;
+            let newPosition;
+            let pawnSamePlayerSamePosition;
             let cannotMove = false;
             for(let i = 0; i < pawnPositions.length; i++) {
                 pawnIndex = player.pawns[i].pawnRoute.findIndex(index => index === player.pawns[i].position);
@@ -240,10 +232,10 @@ wss.on("connection", function connection(ws) {
                     cannotMove = true;
                     continue;
                 }
-                newPawnsition = player.pawns[i].pawnRoute[pawnIndex + numberRolled];
-                isThereAnotherPawnSamePlayerSamePosition = games.find(g => g.id === gameId).players.find(p => p.id === playerId).pawns.find(p => p.position === newPawnsition);
+                newPosition = player.pawns[i].pawnRoute[pawnIndex + numberRolled];
+                pawnSamePlayerSamePosition = player.pawns.find(p => p.position === newPosition);
                 
-                if(isThereAnotherPawnSamePlayerSamePosition !== undefined){
+                if(pawnSamePlayerSamePosition !== undefined){
                     cannotMove = true;
                     continue;
                 }
@@ -252,7 +244,7 @@ wss.on("connection", function connection(ws) {
                     cannotMove = true;
                     continue;
                 }
-                console.log(player.pawns[i]);
+
                 cannotMove = false;
                 break;
             }
@@ -296,7 +288,7 @@ wss.on("connection", function connection(ws) {
             if (pawnIndex === 0 && numberRolled === 6) {
                 if (PawnAtStartSamePlayer === undefined) {
                     if (PawnAtStartDiffPlayer !== undefined) {
-                        console.log("Pawn [" + pawnId + "] ate Pawn [" + PawnAtStartDiffPlayer.pawns.find(p => p.position === pawn.pawnRoute[1]).id + "] at position: " + pawn.pawnRoute[1] + ".");
+                        // console.log("Pawn [" + pawnId + "] ate Pawn [" + PawnAtStartDiffPlayer.pawns.find(p => p.position === pawn.pawnRoute[1]).id + "] at position: " + pawn.pawnRoute[1] + ".");
                         games.find(g => g.id === gameId)
                             .players.find(p => p.pawns.find(p => p.position === pawn.pawnRoute[1]))
                             .pawns.find(p => p.position === pawn.pawnRoute[1])
@@ -316,7 +308,7 @@ wss.on("connection", function connection(ws) {
                 if (PawnSamePlayerNewPosition === undefined || PawnSamePlayerNewPosition.position === pawn.pawnRoute[pawn.pawnRoute.length - 1]) {
                     // if there is a pawn at the new position of a different player, that pawn returns to its home position
                     if (PawnDiffPlayerNewPosition !== undefined) {
-                        console.log("Pawn [" + pawnId + "] ate Pawn [" + PawnDiffPlayerNewPosition.id + "] at position: " + newPosition + ".");
+                        // console.log("Pawn [" + pawnId + "] ate Pawn [" + PawnDiffPlayerNewPosition.id + "] at position: " + newPosition + ".");
                         games.find(g => g.id === gameId)
                             .players.find(player => player.pawns.find(p => p.position === newPosition))
                             .pawns.find(p => p.position === newPosition)
@@ -374,7 +366,6 @@ wss.on("connection", function connection(ws) {
                 if (players.find(item => item.id === playerId)) {
                     let numberOfPlayers = game.players.length - 1;
 
-                    console.log('Number of players: ' + numberOfPlayers);
                     if (game.hasStarted && numberOfPlayers > 1) {
                         if (player.hasTurn) {
                             changeTurns(gameId, playerId);
@@ -387,7 +378,6 @@ wss.on("connection", function connection(ws) {
                     let wasHost = players.find(item => item.id === playerId).isHost;
                     games.find(item => item.id === gameId).players.splice(players.findIndex(item => item.id === playerId), 1);
                     gamesAndPlayers.find(g => g.gameId === gameId).numberOfPlayers--;
-                    console.log('Number of players: ' + numberOfPlayers);
 
                     if (wasHost) {
                         games.find(item => item.id === gameId).players[0].isHost = true;
@@ -396,11 +386,14 @@ wss.on("connection", function connection(ws) {
                     helpers.broadcastGameState(gameConnections, gameId, games.find(item => item.id === gameId));
                 }
             }
+
+            updateStats();
+
         } else {
             console.log('Game Id: ' + gameId + ' not found');
         }
 
-        console.log("Connection closed.");
+        // console.log("Connection closed.");
     });
 
 });
