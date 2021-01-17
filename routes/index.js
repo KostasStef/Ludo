@@ -1,12 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const stats = require('../stats');
 
 /* GET home page */
-router.get("/", function (req, res) {
-    res.sendFile("splash.html", {root: "./public"});
+router.get("/", (req, res) => {
+    res.render("splash.ejs", {
+        ongoingGames: stats.getOngoingGames(),
+        currentlyPlaying: stats.getCurrentlyPlaying(),
+        playersWaiting: stats.getPlayersWaiting()
+    });
 });
 
-/* GET home page */
+/* GET game page */
 router.get("/play", function (req, res) {
     res.sendFile("game.html", {root: "./public"});
 });
