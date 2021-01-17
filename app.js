@@ -210,7 +210,8 @@ wss.on("connection", function connection(ws) {
         else if (message === "rollDice") {
 
             // roll the dice
-            let numberRolled = randomRoll(5, 6);
+            let numberRolled = randomRoll(1, 6);
+            console.log(numberRolled);
 
             // get the player's color
             const playerColor = currGame.players.find(p => p.id === playerId).color;
@@ -228,18 +229,36 @@ wss.on("connection", function connection(ws) {
             }
             console.log("Pawn positions " + pawnPositions);
 
-            let allPawnsInHome = true;
-            // check if all pawns are in the home positions
-            for (let i = 0; i < pawnPositions.length; i++) {
-                if (pawnPositions[i] !== player.pawns[i].pawnRoute[0]) {
-                    allPawnsInHome = false;
+            let pawnIndex;
+            let newPawnsition;
+            let isThereAnotherPawnSamePlayerSamePosition;
+            let cannotMove = false;
+            for(let i = 0; i < pawnPositions.length; i++) {
+                pawnIndex = player.pawns[i].pawnRoute.findIndex(index => index === player.pawns[i].position);
+                
+                if(pawnIndex + numberRolled >= player.pawns[i].pawnRoute.length){
+                    cannotMove = true;
+                    continue;
                 }
+                newPawnsition = player.pawns[i].pawnRoute[pawnIndex + numberRolled];
+                isThereAnotherPawnSamePlayerSamePosition = games.find(g => g.id === gameId).players.find(p => p.id === playerId).pawns.find(p => p.position === newPawnsition);
+                
+                if(isThereAnotherPawnSamePlayerSamePosition !== undefined){
+                    cannotMove = true;
+                    continue;
+                }
+                
+                if(numberRolled !== 6 && pawnIndex === 0){
+                    cannotMove = true;
+                    continue;
+                }
+                console.log(player.pawns[i]);
+                cannotMove = false;
+                break;
             }
 
-            // console.log("All pawns in home position = " + allPawnsInHome);
-
             // if all pawns are in the home positions, then change turns
-            if (allPawnsInHome && numberRolled !== 6) {
+            if (cannotMove) {
                 // change turns
                 changeTurns(gameId, playerId);
                 games.find(g => g.id === gameId).diceRoll.state = 'toRoll';
