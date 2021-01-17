@@ -10,7 +10,7 @@ module.exports = {
             },
             {
                 id: playerColor + 'p2',
-                position: playerColor + 'h2',
+                position: playerColor + 'h1',
                 pawnRoute: config.positions(playerColor, 2)
             },
             {
@@ -20,7 +20,7 @@ module.exports = {
             },
             {
                 id: playerColor + 'p4',
-                position: playerColor + 'h4',
+                position: playerColor + 'h5',
                 pawnRoute: config.positions(playerColor, 4)
             },
         ];
