@@ -1,5 +1,6 @@
 const express = require("express");
 const http = require("http");
+
 const helpers = require('./helpers');
 const crypto = require('crypto');
 
@@ -9,28 +10,48 @@ const indexRouter = require("./routes/index");
 const port = process.argv[2];
 const app = express();
 
-let gameStats = {
-    games: 0,
-    players: 0,
-    waitingToPlay: 0
+app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"));
+
+function playerCounter(arrayOfGames) {
+    let number = 0;
+    if (arrayOfGames !== []) {
+        for (let i = 0; i < arrayOfGames.length; i++) {
+            number += arrayOfGames[i].players.length;
+        }
+    }
+    return number;
 }
 
-app.get('/serverStats', function (req, res) {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(gameStats));
+function ongoingGames() {
+    return games.length !== 0 ? games.filter(g => g.hasStarted === true).length : 0;
+}
+
+function currentlyPlaying() {
+    return playerCounter(games.length !== 0 ? games.filter(g => g.hasStarted === true) : []);
+}
+
+function playersWaiting() {
+    return playerCounter(games.length !== 0 ? games.filter(g => g.hasStarted === false) : []);
+}
+
+app.get("/", (req, res) => {
+    res.render("splash.ejs", {
+        ongoingGames: ongoingGames(),
+        currentlyPlaying: currentlyPlaying(),
+        playersWaiting: playersWaiting()
+    });
 });
-app.get("/", indexRouter);
 
-app.use(express.static(__dirname + "/public"));
+app.get("/play", indexRouter);
+
 const server = http.createServer(app).listen(port);
-
 const wss = new websocket.Server({server});
-let websockets = {}; // property: websocket, value: game
 
 let currentPlayerColor = '';
 let gameConnections = [];
 let games = [];
-let gameNumber = 1;
+let gameNumber = 0;
 let gamesAndPlayers = [];
 
 let connectionID = ''; // each websocket receives a unique ID
@@ -145,7 +166,7 @@ wss.on("connection", function connection(ws) {
         const gameId = parseInt(con.id.split(':')[0]);
         const playerId = con.id.split(':')[1];
         const game = games.find(g => g.id === gameId);
-        let player = game.players.find(p => p.id === playerId);
+        const player = game.players.find(p => p.id === playerId);
 
         let randomRoll = (min = 1, max = 6) => {
             return Math.round(Math.random() * (max - min) + min);
@@ -250,45 +271,82 @@ wss.on("connection", function connection(ws) {
 
             let pawnId = message.substring(10);
             let pawn = player.pawns.find(p => p.id === pawnId);
+
             let position = pawn.position;
             let pawnIndex = pawn.pawnRoute.findIndex(index => index === position);
-            let newPawnsition = pawn.pawnRoute[pawnIndex + numberRolled];
-            let isThereAnotherPawnSamePlayerSamePosition = games.find(g => g.id === gameId).players.find(p => p.id === playerId).pawns.find(p => p.position === newPawnsition);
-            let isThereAnotherPawnSamePosition = games.find(g => g.id === gameId).players.find(player => player.pawns.find(p => p.position === newPawnsition));//.pawns.find(p => p.position === newPawnsition);
-            let isThereAnotherPawnAtStartSamePlayer = games.find(g => g.id === gameId).players.find(p => p.id === playerId).pawns.find(p => p.position === pawn.pawnRoute[1]);
-            let isThereAnotherPawnAtStart = games.find(g => g.id === gameId).players.find(player => player.pawns.find(p => p.position === pawn.pawnRoute[1]))//.pawns.find(p => p.position === pawn.pawnRoute[1]);
-            
+
+            let newPosition = pawn.pawnRoute[pawnIndex + numberRolled];
+            let newPawnIndex = pawnIndex + numberRolled;
+
+            let PawnSamePlayerNewPosition = game
+                .players.find(p => p.id === playerId)
+                .pawns.find(p => p.position === newPosition);
+            let PawnDiffPlayerNewPosition = game
+                .players.find(p => p.id !== playerId)
+                .pawns.find(p => p.position === newPosition);  //.pawns.find(p => p.position === newPosition);
+
+            let PawnAtStartSamePlayer = game
+                .players.find(p => p.id === playerId)
+                .pawns.find(p => p.position === pawn.pawnRoute[1]);
+            let PawnAtStartDiffPlayer = game
+                .players.find(p => p.id !== playerId)
+                .pawns.find(p => p.position === pawn.pawnRoute[1]);
+
 
             if (pawnIndex === 0 && numberRolled === 6) {
-                if (isThereAnotherPawnAtStartSamePlayer === undefined) {
+                if (PawnAtStartSamePlayer === undefined) {
+                    if (PawnAtStartDiffPlayer !== undefined) {
+                        console.log("Pawn [" + pawnId + "] ate Pawn [" + PawnAtStartDiffPlayer.pawns.find(p => p.position === pawn.pawnRoute[1]).id + "] at position: " + pawn.pawnRoute[1] + ".");
+                        games.find(g => g.id === gameId)
+                            .players.find(p => p.pawns.find(p => p.position === pawn.pawnRoute[1]))
+                            .pawns.find(p => p.position === pawn.pawnRoute[1])
+                            .position = PawnAtStartDiffPlayer.pawnRoute[0];
+                    }
+
                     games.find(g => g.id === gameId).players.find(p => p.id === playerId)
                         .pawns.find(p => p.id === pawnId)
                         .position = pawn.pawnRoute[1];
-                    if (isThereAnotherPawnAtStart !== undefined) {
-                        console.log("Pawn [" + pawnId + "] ate Pawn [" + isThereAnotherPawnAtStart.pawns.find(p => p.position === pawn.pawnRoute[1]).pawnId + "] at position: " + pawn.pawnRoute[1] + ".");
-                        games.find(g => g.id === gameId)
-                            .players.find(player => player.pawns
-                            .find(p => p.position === pawn.pawnRoute[1])).pawns
-                            .find(p => p.position === pawn.pawnRoute[1]).position = isThereAnotherPawnAtStart.pawns.find(p => p.position === pawn.pawnRoute[1]).pawnRoute[0];
-                    }
-                    
+
+                    games.find(g => g.id === gameId).diceRoll.state = 'toRoll';
+
                 }
 
-                games.find(g => g.id === gameId).diceRoll.state = 'toRoll';
-
             } else if (pawnIndex !== 0 && (pawnIndex + numberRolled) < pawn.pawnRoute.length) {
-                if (isThereAnotherPawnSamePlayerSamePosition === undefined) {
+                // if there is a pawn at the new position of the same player, the pawn can't make the move
+                if (PawnSamePlayerNewPosition === undefined || PawnSamePlayerNewPosition.position === pawn.pawnRoute[pawn.pawnRoute.length - 1]) {
+                    // if there is a pawn at the new position of a different player, that pawn returns to its home position
+                    if (PawnDiffPlayerNewPosition !== undefined) {
+                        console.log("Pawn [" + pawnId + "] ate Pawn [" + PawnDiffPlayerNewPosition.id + "] at position: " + newPosition + ".");
+                        games.find(g => g.id === gameId)
+                            .players.find(player => player.pawns.find(p => p.position === newPosition))
+                            .pawns.find(p => p.position === newPosition)
+                            .position = PawnDiffPlayerNewPosition.pawnRoute[0];
+                    }
+                    // move pawn
                     games.find(g => g.id === gameId).players.find(p => p.id === playerId)
                         .pawns.find(p => p.id === pawnId)
-                        .position = newPawnsition;
-                    if (isThereAnotherPawnSamePosition !== undefined) {
-                        console.log("Pawn [" + pawnId + "] ate Pawn [" + isThereAnotherPawnSamePosition.pawns.find(p => p.position === newPawnsition).pawnId + "] at position: " + newPawnsition + ".");
-                        games.find(g => g.id === gameId).players
-                            .find(player => player.pawns
-                                .find(p => p.position === newPawnsition)).position = isThereAnotherPawnSamePosition.pawns.find(p => p.position === newPawnsition).pawnRoute[0];
+                        .position = newPosition;
+
+                    // increment score if a pawn reaches the center
+                    if (newPawnIndex === (pawn.pawnRoute.length - 1)) {
+                        games.find(g => g.id === gameId)
+                            .players.find(p => p.id === playerId)
+                            .score++;
                     }
-                    // change turns
-                    changeTurns(gameId, playerId);
+
+                    let score = games.find(g => g.id === gameId)
+                        .players.find(p => p.id === playerId)
+                        .score
+
+                    // if score is 4, then end the game for everyone
+                    if (score === 4) {
+                        games.find(item => item.id === gameId).exitCode = '0:' + player.color + '.WON_THE_GAME';
+                    }
+
+                    if (numberRolled !== 6) {
+                        // change turns
+                        changeTurns(gameId, playerId);
+                    }
 
                     games.find(g => g.id === gameId).diceRoll.state = 'toRoll';
                 }
@@ -298,14 +356,13 @@ wss.on("connection", function connection(ws) {
         helpers.broadcastGameState(gameConnections, gameId, games.find(g => g.id === gameId));
     });
 
-    con.on("close", function (code) {
+    con.on("close", function () {
         const gameId = parseInt(con.id.split(':')[0]);
         const playerId = con.id.split(':')[1];
         const game = games.find(item => item.id === gameId);
         const player = game.players.find(p => p.id === playerId);
 
         if (game) {
-            // playerColors.push(games.find(item => item.id === gameId).players.find(p => p.id === playerId).color);
             gamesAndPlayers.find(g => g.gameId === gameId).colors.push(games.find(item => item.id === gameId).players.find(p => p.id === playerId).color);
             if (game.players.length === 1) {
                 // this is the last player leaving the game
@@ -315,9 +372,6 @@ wss.on("connection", function connection(ws) {
             } else {
                 let players = game.players;
                 if (players.find(item => item.id === playerId)) {
-
-                    // gamesAndPlayers.find(g => g.gameId === gameId).numberOfPlayers -= 1;
-                    // let numberOfPlayers = gamesAndPlayers.find(g => g.gameId === gameId).numberOfPlayers;
                     let numberOfPlayers = game.players.length - 1;
 
                     console.log('Number of players: ' + numberOfPlayers);
@@ -338,7 +392,6 @@ wss.on("connection", function connection(ws) {
                     if (wasHost) {
                         games.find(item => item.id === gameId).players[0].isHost = true;
                     }
-
 
                     helpers.broadcastGameState(gameConnections, gameId, games.find(item => item.id === gameId));
                 }
