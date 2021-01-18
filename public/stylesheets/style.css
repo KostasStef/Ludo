@@ -1,3 +1,51 @@
+@media only screen 
+and (min-device-width: 320px )
+and (max-device-width: 480px) {
+    /* TO DO */
+}
+
+@media only screen 
+and (min-device-width: 481px )
+and (max-device-width: 768px) {
+    /* TO DO */
+
+}
+
+@media only screen 
+and (min-device-width: 769px )
+and (max-device-width: 1024px) {
+    /* TO DO */
+
+}
+
+@media only screen 
+and (min-device-width: 1025px )
+and (max-device-width: 1200px) {
+    /* TO DO */
+
+}
+
+@media only screen 
+and (min-device-width: 1201px ) {
+
+    /* TO DO */
+}
+
+@keyframes movePawn {
+/* TO DO */
+}
+
+.pawn {
+    height: 32px;
+    width: 32px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    animation-name: movePawn;
+    animation-duration: 1s;
+}
+
+
 *,*:before,*:after {
     margin: 0;
     padding: 0;
