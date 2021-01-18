@@ -1,0 +1,249 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    cursor: default;
+}
+
+body {
+    /*font*/
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    /*background*/
+    background-color: #ecf0f1;
+}
+
+ul {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+    color: #ecf0f1;
+    cursor: pointer;
+}
+
+.navbar {
+    background-color: #2c3e50;
+}
+
+.navbar ul {
+    display: flex;
+    height: 50px;
+}
+
+.navbar li {
+    margin: 12px 0 12px 0;
+    font-style: italic;
+    font-weight: 500;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.navbar a {
+    padding: 10px;
+    /*margin: 0 100px;*/
+    margin: 0 4vw;
+    transition-duration: 150ms;
+}
+
+.navbar a:hover {
+    color: #1abc9c;
+    transition-duration: 150ms;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    overflow: auto;
+    padding: 0 40px;
+    position: relative;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.play {
+    background-image: url("../images/triangles.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    width: 100%;
+    height: 94.9vh;
+    position: relative;
+    color: #2C3E50;
+    mix-blend-mode: normal;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+
+    align-items: center;
+    justify-content: center;
+}
+
+.stats {
+    /*margin-top: 25vh;*/
+}
+
+#logo {
+    padding-bottom: 1vh;
+    font-style: normal;
+    font-weight: 200;
+    font-size: 17vh;
+    line-height: 169px;
+    letter-spacing: 5vw;
+    padding-left: 5vw;
+}
+
+@media screen and (max-width: 700px) {
+    #logo {
+        padding-bottom: 0;
+        font-size: 22vw;
+        letter-spacing: 9vw;
+        padding-left: 9vw;
+    }
+}
+
+.stats ul {
+    background-color: rgba(236, 240, 241, 0.3);
+    padding: 10px;
+    border-radius: 1000px;
+    font-style: italic;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stats li {
+    margin: 0 2vw;
+    font-size: 16px;
+}
+
+@media screen and (max-width: 700px) {
+    .stats li {
+        font-size: 2.5vw;
+    }
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#playButton {
+    margin-top: 15vh;
+    margin-bottom: 2vh;
+
+    font-style: normal;
+    font-weight: 900;
+    font-size: 36px;
+    /*font-size: 2.5vw;*/
+    letter-spacing: 0.38em;
+    color: #ECF0F1;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+
+    /*width: 14vw;*/
+    width: 350px;
+    /*height: 7vw;*/
+    height: 100px;
+    background: #2C3E50;
+    border: 0;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+
+    cursor: pointer;
+
+    transition-duration: 150ms;
+}
+
+#playButton:hover {
+    font-size: 30px;
+    color: #1abc9c;
+    transition-duration: 150ms;
+}
+
+@media screen and (max-width: 700px) {
+    #playButton {
+        font-size: 6vw;
+        width: 56vw;
+        height: 16vw;
+    }
+}
+
+/*h2 {*/
+/*    font-weight: 300;*/
+/*    font-size: 48px;*/
+/*    line-height: 44px;*/
+
+/*    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);*/
+/*}*/
+
+/*.header {*/
+/*    margin: 5vh 0 5vh 0;*/
+
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-content: center;*/
+/*}*/
+
+/*#theTeam {*/
+/*    color: #ECF0F1;*/
+/*}*/
+
+/*#madeWith {*/
+/*    color: #2c3e50;*/
+/*}*/
+
+/*.about {*/
+/*    background-image: url("../images/the_team_background.png");*/
+/*    background-repeat: no-repeat;*/
+/*    background-position: 50% 0;*/
+/*    background-size: 100vw;*/
+/*    height: 64vh;*/
+/*    width: 100%;*/
+/*    display: flex;*/
+/*    position: relative;*/
+/*}*/
+
+/*.pfp {*/
+/*    width: 9vw;*/
+/*    border-radius: 100%;*/
+/*    border: 5px solid #ecf0f1;*/
+/*    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);*/
+/*}*/
+
+/*.grid-container {*/
+/*    display: grid;*/
+/*    grid-template-columns: 16vh 30vw 16vh;*/
+/*    grid-template-rows: 16vh 16vh;*/
+/*    grid-template-areas:*/
+/*            "ap a ."*/
+/*            ". k kp";*/
+
+/*}*/
+
+/*.anthony-pfp {*/
+/*    grid-area: ap;*/
+/*    margin: auto;*/
+/*}*/
+
+/*.anthony {*/
+/*    grid-area: a;*/
+/*    margin: auto 0 auto 2vw;*/
+/*}*/
+
+/*.kostas-pfp {*/
+/*    grid-area: kp;*/
+/*    text-align: right;*/
+/*    margin: auto;*/
+/*}*/
+
+/*.kostas {*/
+/*    grid-area: k;*/
+/*    text-align: right;*/
+/*    margin: auto 2vw auto 0;*/
+/*}*/
