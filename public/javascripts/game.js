@@ -84,13 +84,13 @@ function updateBoard(players) {
             let pawnId = pawns[i].id;
             if (!document.getElementById(pawnId)) {
                 let pawn = document.createElement("IMG");
-                pawn.style.height = "32px";
-                pawn.style.width = "32px";
-                pawn.style.position = "relative";
-                pawn.style.top = "0px";
-                pawn.style.left = "0px";
                 pawn.src = imgSrc;
                 pawn.id = pawnId;
+                pawn.className = "pawn";
+                /*
+                var audio = new Audio('audio_file.mp3');
+                audio.play() <- eventlistener
+                */
                 document.getElementById(pawns[i].position).appendChild(pawn);
 
                 if (players[j].color === playerColor) {
