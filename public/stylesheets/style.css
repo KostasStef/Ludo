@@ -1,32 +1,32 @@
 @media only screen 
-and (min-device-width: 320px )
+and (min-device-width: 320px)
 and (max-device-width: 480px) {
     /* TO DO */
 }
 
 @media only screen 
-and (min-device-width: 481px )
+and (min-device-width: 481px)
 and (max-device-width: 768px) {
     /* TO DO */
 
 }
 
 @media only screen 
-and (min-device-width: 769px )
+and (min-device-width: 769px)
 and (max-device-width: 1024px) {
     /* TO DO */
 
 }
 
 @media only screen 
-and (min-device-width: 1025px )
+and (min-device-width: 1025px)
 and (max-device-width: 1200px) {
     /* TO DO */
 
 }
 
 @media only screen 
-and (min-device-width: 1201px ) {
+and (min-device-width: 1201px) {
 
     /* TO DO */
 }
@@ -104,7 +104,8 @@ and (min-device-width: 1201px ) {
     background-color: #2980b9;
 }
 .yellow {
-    background-color: #f39c12;
+    /*background-color: #f39c12;*/
+    background-color: #f1c40f;
 }
 .redBlue {
     background: linear-gradient(45deg, #c0392b 50%, #2980b9 50%);;
@@ -113,13 +114,16 @@ and (min-device-width: 1201px ) {
     background: linear-gradient(315deg, #c0392b 50%, #27ae60 50%);
 }
 .yellowBlue {
-    background: linear-gradient(315deg, #2980b9 50%, #f39c12 50%);
+    /*background: linear-gradient(315deg, #2980b9 50%, #f39c12 50%);*/
+    background: linear-gradient(315deg, #2980b9 50%, #f1c40f 50%);
 }
 .yellowGreen {
-    background: linear-gradient(45deg, #27ae60 50%, #f39c12 50%);;
+    /*background: linear-gradient(45deg, #27ae60 50%, #f39c12 50%);;*/
+    background: linear-gradient(45deg, #27ae60 50%, #f1c40f 50%);;
 }
 .allColors {
-    background: conic-gradient(from -45deg at 50% 50%, #27ae60 0deg, #f39c12 0deg, #f39c12 90deg, #2980b9 90deg, #2980B9 180deg, #C0392B 180deg, #C0392B 270deg, #27ae60 270deg, #27ae60 360deg, #F39C12 360deg);
+    /*background: conic-gradient(from -45deg at 50% 50%, #27ae60 0deg, #f39c12 0deg, #f39c12 90deg, #2980b9 90deg, #2980B9 180deg, #C0392B 180deg, #C0392B 270deg, #27ae60 270deg, #27ae60 360deg, #F39C12 360deg);*/
+    background: conic-gradient(from -45deg at 50% 50%, #27ae60 0deg, #f1c40f 0deg, #f1c40f 90deg, #2980b9 90deg, #2980B9 180deg, #C0392B 180deg, #C0392B 270deg, #27ae60 270deg, #27ae60 360deg, #f1c40f 360deg);
 }
 .white {
     background-color: #ecf0f1;
