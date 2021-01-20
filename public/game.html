@@ -12,6 +12,15 @@
     <link rel="icon" href="./images/pawn_red.png">
 </head>
 <body onload="connectToServer()" class="bodyback">
+    <script>
+        function hideWarning() {
+            document.getElementsByClassName("warning")[0].setAttribute("style", "visibility: hidden");
+        }
+    </script>
+    <div class='warning' onclick="hideWarning()">
+        <h3>Your resolution is too small!</h3>
+        <p>Please consider increasing your resolution for an optimum gameplay!</p>
+    </div>
 <div class="top-row">
     <div class="button">
         <button class="leave-text" onclick="endGame()"><i class="material-icons">arrow_back</i>Leave&nbsp;</button>

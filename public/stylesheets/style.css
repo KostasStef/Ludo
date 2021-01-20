@@ -1,38 +1,54 @@
+.warning {
+    visibility: visible;
+    position: absolute;
+    text-align:center;
+    justify-content: center;
+    align-items: center;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    border-radius: 6px;
+    background-color: #f1c40f;
+    animation: barrelRoll 1.5s;
+}
+@keyframes barrelRoll {
+    50%{
+        transform: rotate(60deg);
+        left: 100%;
+    }
+    60%{
+        transform: rotate(120deg);
+        left: 90%;
+    }
+    70%{
+        transform: rotate(180deg);
+        left: 80%;
+    }
+    80%{
+        transform: rotate(240deg);
+        left: 70%;
+    }
+    90%{
+        transform: rotate(300deg);
+        left: 60%;
+    }
+    100%{
+        transform: rotate(360deg);
+        left: 50%;;
+    }
+  }
 @media only screen 
-and (min-device-width: 320px)
-and (max-device-width: 480px) {
-    /* TO DO */
+and (max-device-width: 320px) {
+    .warning {
+        visibility: visible;
+
+    }
 }
 
 @media only screen 
-and (min-device-width: 481px)
-and (max-device-width: 768px) {
-    /* TO DO */
-
-}
-
-@media only screen 
-and (min-device-width: 769px)
-and (max-device-width: 1024px) {
-    /* TO DO */
-
-}
-
-@media only screen 
-and (min-device-width: 1025px)
-and (max-device-width: 1200px) {
-    /* TO DO */
-
-}
-
-@media only screen 
-and (min-device-width: 1201px) {
-
-    /* TO DO */
-}
-
-@keyframes movePawn {
-/* TO DO */
+and (min-device-width: 321px) {
+    .warning {
+        visibility: hidden;
+    }
 }
 
 body {

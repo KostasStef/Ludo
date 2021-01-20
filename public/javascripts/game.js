@@ -32,6 +32,8 @@ function setPawn(e) {
         ArePawnsAvailable = false;
         console.log(pawnId + " was clicked.");
         soc.send("movedPawn " + pawnId);
+        var audio = new Audio('./sfx/movePiece.wav');
+        audio.play();
     }
 }
 
@@ -86,11 +88,8 @@ function updateBoard(players) {
                 let pawn = document.createElement("IMG");
                 pawn.src = imgSrc;
                 pawn.id = pawnId;
+                pawn.className = "pawn";
 
-                /*
-                var audio = new Audio('audio_file.mp3');
-                audio.play() <- eventlistener
-                */
                 if (typeof pawns[i].position === 'string' && pawns[i].position.includes('c')) {
                     pawn.className = 'small-pawn';
                 } else {
