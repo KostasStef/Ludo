@@ -5,6 +5,15 @@
     <link rel="stylesheet" type="text/css" href="./stylesheets/style.css">
 </head>
 <body onload="connectToServer()" class="bodyback">
+    <script>
+        function hideWarning() {
+            document.getElementsByClassName("warning")[0].setAttribute("style", "visibility: hidden");
+        }
+    </script>
+    <div class='warning' onclick="hideWarning()">
+        <h3>Your resolution is too small!</h3>
+        <p>Please consider increasing your resolution for an optimum gameplay!</p>
+    </div>
     <div id="yourColor" class="text-white text-center pt"></div>
     <div>
         <button id="startGameButton" style="visibility: hidden" onclick="startGame()">Start game</button>

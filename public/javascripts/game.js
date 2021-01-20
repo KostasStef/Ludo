@@ -32,6 +32,8 @@ function setPawn(e) {
         ArePawnsAvailable = false;
         console.log(pawnId + " was clicked.");
         soc.send("movedPawn " + pawnId);
+        var audio = new Audio('./sfx/movePiece.wav');
+        audio.play();
     }
 }
 
@@ -87,10 +89,6 @@ function updateBoard(players) {
                 pawn.src = imgSrc;
                 pawn.id = pawnId;
                 pawn.className = "pawn";
-                /*
-                var audio = new Audio('audio_file.mp3');
-                audio.play() <- eventlistener
-                */
                 document.getElementById(pawns[i].position).appendChild(pawn);
 
                 if (players[j].color === playerColor) {
