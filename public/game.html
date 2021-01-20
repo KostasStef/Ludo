@@ -12,29 +12,37 @@
     <link rel="icon" href="./images/pawn_red.png">
 </head>
 <body onload="connectToServer()" class="bodyback">
-    <script>
-        function hideMessage() {
-            document.getElementsByClassName("warning")[0].setAttribute("style", "visibility: hidden");
-        }
-    </script>
-    <div class='warning' onclick="hideMessage()">
-        <h3>Your resolution is too small!</h3>
-        <p>Please consider increasing your resolution for an optimum gameplay!</p>
-    </div>
-    <div class='winning' onclick="hideMessage()"></div>
-<div class="top-row">
-    <div class="button">
-        <button class="leave-text" onclick="endGame()"><i class="material-icons">arrow_back</i>Leave&nbsp;</button>
-        <button class="disabled-button" id="startGameButton" style="visibility: visible" onclick="startGame()"><i id="change-to-timer" class="material-icons">play_arrow</i><p id="time">Start game</p>&nbsp;</button>
-    </div>
-    <div class="button">
-        <button class="disabled-button" id="rollTheDice" style="visibility: visible" onclick="rollTheDice()"><i class="material-icons">casino</i><p id="roll">Roll dice</p>&nbsp;</button>
-    </div>
-    <div class="yourColor text-tr">
-        <div class="text-white text-center"><p>Your color is <strong id="yourColor"></strong></p></div>
-    </div>
-    <div class="score text-tr">
-        <div class="text-white text-center">Score: <strong id="score"></strong></div>
+<script>
+    function hideMessage() {
+        document.getElementsByClassName("warning")[0].setAttribute("style", "visibility: hidden");
+    }
+</script>
+<div class='warning' onclick="hideMessage()">
+    <h3>Your resolution is too small!</h3>
+    <p>Please consider increasing your resolution for an optimum gameplay!</p>
+</div>
+<div class='winning' onclick="hideMessage()"></div>
+<div class="grid-container">
+    <div class="top-row">
+        <div class="button ls">
+            <button class="leave-text" onclick="endGame()"><i class="material-icons">arrow_back</i>Leave&nbsp;</button>
+            <button class="disabled-button" id="startGameButton" style="visibility: visible" onclick="startGame()"><i
+                    id="change-to-timer" class="material-icons">play_arrow</i>
+                <p id="time">Start game</p>&nbsp;
+            </button>
+        </div>
+        <div class="button rl">
+            <button class="disabled-button" id="rollTheDice" style="visibility: visible" onclick="rollTheDice()"><i
+                    class="material-icons">casino</i>
+                <p id="roll">Roll dice</p>&nbsp;
+            </button>
+        </div>
+        <div class="yourColor text-tr">
+            <div class="text-white text-center"><p>Your color is <strong id="yourColor"></strong></p></div>
+        </div>
+        <div class="score text-tr">
+            <div class="text-white text-center">Score:&nbsp;<strong id="score"></strong></div>
+        </div>
     </div>
 </div>
 <div id="gameScreen" style="visibility: visible">
