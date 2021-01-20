@@ -202,7 +202,6 @@ wss.on("connection", function connection(ws) {
 
         // ———————————————————— ROLL DICE ————————————————————
         else if (message === "rollDice") {
-
             // roll the dice
             let numberRolled = randomRoll(1, 6);
 
@@ -328,7 +327,7 @@ wss.on("connection", function connection(ws) {
 
                     let score = games.find(g => g.id === gameId)
                         .players.find(p => p.id === playerId)
-                        .score
+                        .score;
 
                     // if score is 4, then end the game for everyone
                     if (score === 4) {
