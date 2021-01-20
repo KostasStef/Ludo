@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Ludo | Welcome</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./stylesheets/splash.css">
+    <link rel="icon" href="./images/pawn_red.png">
+</head>
+<body>
+<div class="hello">
+<!--navbar-->
+<div class="navbar">
+    <div class="container flex">
+        <nav>
+            <ul>
+                <li><a href="/">Play</a></li>
+                <li><a>Rules</a></li>
+                <li><a href="/#about">About</a></li>
+                <li><a href="https://github.com/ph3real/Ludo/tree/Branch" target="_blank">GitHub</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<section id="rules" class="container rules">
+    <h2>Rules</h2>
+
+    <h3>Play</h3>
+    <p>Players take turns in a clockwise order; a randomly selected player starts.</p>
+    <p>Each throw, the player decides which piece to move. A piece simply moves in a clockwise direction around the
+        track given by the number thrown. If no piece can legally move according to the number thrown, play passes to
+        the next player.</p>
+    <p>A throw of 6 gives another turn.</p>
+    <p>A player must throw a 6 to move a piece from the starting circle onto the first square on the track. The piece
+        moves 6 squares around the circuit beginning with the appropriately coloured start square (and the player then
+        has another turn).</p>
+    <p>If a piece lands on a piece of a different colour, the piece jumped upon is returned to its starting circle.</p>
+    <p>A piece is not allowed to land upon a piece of the same colour.</p>
+
+    <h3>Winning</h3>
+    <p>When a piece has circumnavigated the board, it proceeds up the home column. A piece can only be moved onto the
+        home triangle by an exact throw.</p>
+    <p>The first person to move all 4 pieces into the home triangle wins.</p>
+</section>
+
+<footer>
+    <div id="left">
+        <p>&copy; Copyright 2021. All rights reserved.</p>
+    </div>
+    <div id="middle">
+        <p>Developed for CSE1500 at the Technical University of Delft.</p>
+    </div>
+    <div id="right">
+        <img src="./images/TU_delft_logo.png">
+    </div>
+</footer>
+</div>
+</body>
+</html>
