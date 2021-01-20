@@ -291,7 +291,7 @@ function timeToString(time) {
 let startTime;
 let elapsedTime = 0;
 let timerInterval;
-let i = 0;
+let i = 3;
 let hourglassStates = ['hourglass_empty', 'hourglass_top', 'hourglass_full', 'hourglass_bottom'];
 
 function print(time, i) {
@@ -303,12 +303,12 @@ function start() {
     startTime = Date.now() - elapsedTime;
     timerInterval = setInterval(function printTime() {
         elapsedTime = Date.now() - startTime;
-        if (i === 4) {
-            i = 0;
-        }
-        console.log('i = ' + i);
+        // if (i === 4) {
+        //     i = 0;
+        // }
+        // console.log('i = ' + i);
         print(timeToString(elapsedTime), i);
-        i++;
+        // i++;
     }, 1000);
 }
 
