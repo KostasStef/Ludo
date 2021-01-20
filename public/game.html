@@ -13,14 +13,15 @@
 </head>
 <body onload="connectToServer()" class="bodyback">
     <script>
-        function hideWarning() {
+        function hideMessage() {
             document.getElementsByClassName("warning")[0].setAttribute("style", "visibility: hidden");
         }
     </script>
-    <div class='warning' onclick="hideWarning()">
+    <div class='warning' onclick="hideMessage()">
         <h3>Your resolution is too small!</h3>
         <p>Please consider increasing your resolution for an optimum gameplay!</p>
     </div>
+    <div class='winning' onclick="hideMessage()"></div>
 <div class="top-row">
     <div class="button">
         <button class="leave-text" onclick="endGame()"><i class="material-icons">arrow_back</i>Leave&nbsp;</button>

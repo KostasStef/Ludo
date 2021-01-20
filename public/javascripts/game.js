@@ -143,13 +143,13 @@ function connectToServer() {
 
             if (code === '1') {
                 alert("Exit code " + code + ": " + msg);
-
             } else if (code === '0') {
                 let color = msg.split('.')[0];
+                document.getElementsByClassName("winning")[0].innerText = ""+ getColorName(color) + " has won the game!";
+                document.getElementsByClassName("winning")[0].setAttribute("style", "visibility: visible; color:white; background-color:"+getColorName(color));
                 alert(getColorName(color) + " won the game!");
-            }
-
-            endGame();
+             }
+             endGame();
         }
 
         if (playerColor === '') {
