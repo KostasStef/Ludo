@@ -205,7 +205,6 @@ wss.on("connection", function connection(ws) {
 
             // roll the dice
             let numberRolled = randomRoll(1, 6);
-
             // get the player's color
             const playerColor = currGame.players.find(p => p.id === playerId).color;
 
@@ -215,6 +214,7 @@ wss.on("connection", function connection(ws) {
                 roll: numberRolled,
                 state: 'rolled'
             };
+            games.find(g=>g.id===gameId).players.find(p => p.id === playerId).score++;
 
             let pawnPositions = [];
             for (let i = 0; i < player.pawns.length; i++) {
@@ -331,7 +331,7 @@ wss.on("connection", function connection(ws) {
                         .score
 
                     // if score is 4, then end the game for everyone
-                    if (score === 4) {
+                    if (score >= 4) {
                         games.find(item => item.id === gameId).exitCode = '0:' + player.color + '.WON_THE_GAME';
                     }
 

@@ -10,6 +10,19 @@
     background-color: #f1c40f;
     animation: barrelRoll 1.5s;
 }
+
+.winning {
+    left: 50%;
+    height: 30px;
+    transform: translate(-50%);
+    border-radius: 6px;
+    visibility: hidden;
+    position: relative;
+    text-align:center;
+    justify-content: center;
+    align-items: center;
+}
+
 @keyframes barrelRoll {
     50%{
         transform: rotate(60deg);
