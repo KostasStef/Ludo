@@ -3,6 +3,7 @@ let connectionID = null;
 let playerColor = '';
 let isHost = null;
 let ArePawnsAvailable = false;
+let startTimer = false;
 
 function getColorName(code) {
     let colorName = '';
@@ -144,8 +145,7 @@ function connectToServer() {
                 alert("Exit code " + code + ": " + msg);
 
             } else if (code === '0') {
-                let color = gameState.exitCode.split('.')[0];
-                let msg = gameState.exitCode.split('.')[1];
+                let color = msg.split('.')[0];
                 alert(getColorName(color) + " won the game!");
             }
 
@@ -244,6 +244,13 @@ function connectToServer() {
 
         if (gameState.hasStarted) {
             document.getElementById('score').innerText = player.score;
+            startTimer = true;
+        }
+
+        if (startTimer) {
+            start();
+            document.getElementById("startGameButton").classList.remove('disabled-button');
+            document.getElementById("startGameButton").classList.add('timer');
         }
 
         // Generate all pawns based on gameState
@@ -260,3 +267,48 @@ function endGame() {
 function rollTheDice() {
     soc.send("rollDice");
 }
+
+function timeToString(time) {
+    let diffInHrs = time / 3600000;
+    let hh = Math.floor(diffInHrs);
+
+    let diffInMin = (diffInHrs - hh) * 60;
+    let mm = Math.floor(diffInMin);
+
+    let diffInSec = (diffInMin - mm) * 60;
+    let ss = Math.floor(diffInSec);
+
+    // let diffInMs = (diffInSec - ss) * 100;
+    // let ms = Math.floor(diffInMs);
+
+    let formattedMM = mm.toString().padStart(2, "0");
+    let formattedSS = ss.toString().padStart(2, "0");
+    // let formattedMS = ms.toString().padStart(2, "0");
+
+    return `${formattedMM}:${formattedSS}`;
+}
+
+let startTime;
+let elapsedTime = 0;
+let timerInterval;
+let i = 0;
+let hourglassStates = ['hourglass_empty', 'hourglass_top', 'hourglass_full', 'hourglass_bottom'];
+
+function print(time, i) {
+    document.getElementById("time").innerHTML = time;
+    document.getElementById("change-to-timer").innerText = hourglassStates[i];
+}
+
+function start() {
+    startTime = Date.now() - elapsedTime;
+    timerInterval = setInterval(function printTime() {
+        elapsedTime = Date.now() - startTime;
+        if (i === 4) {
+            i = 0;
+        }
+        console.log('i = ' + i);
+        print(timeToString(elapsedTime), i);
+        i++;
+    }, 1000);
+}
+
