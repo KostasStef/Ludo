@@ -538,6 +538,10 @@ footer {
     margin: auto;
 }
 
+#middle::before {
+    content: "\2197";
+}
+
 #right {
     margin: auto;
 }
@@ -547,6 +551,10 @@ footer {
     width: 15vw;
     padding-top: .75vw;
     padding-bottom: .75vw;
+}
+
+#right::after {
+    content: "\2122";
 }
 
 @media screen and (max-width: 950px) {
