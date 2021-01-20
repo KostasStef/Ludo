@@ -142,6 +142,7 @@ function connectToServer() {
 
             if (code === '1') {
                 alert("Exit code " + code + ": " + msg);
+
             } else if (code === '0') {
                 let color = gameState.exitCode.split('.')[0];
                 let msg = gameState.exitCode.split('.')[1];
@@ -215,7 +216,11 @@ function connectToServer() {
             // document.getElementById('rollTheDice').classList.add('disabled-dice');
             document.getElementById('rollTheDice').className = 'disabled-dice';
 
-            let pc = gameState.players.find(p => p.hasTurn === true).color;
+            let pc = '';
+
+            if (gameState.hasStarted) {
+                pc = gameState.players.find(p => p.hasTurn === true).color;
+            }
 
             if (pc === 'r') {
                 document.getElementById('rollTheDice').classList.add('red');
