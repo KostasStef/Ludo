@@ -7,24 +7,29 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="./stylesheets/splash.css">
+    <link rel="icon" href="./images/pawn_red.png">
 </head>
 <body>
+<button onclick="location.href='#play';" class="scrollToTopBtn"><i class="material-icons mouse-pointer">arrow_upward</i></button>
 <!--navbar-->
-<div class="navbar">
-    <div class="container flex">
-        <nav>
-            <ul>
-                <li><a href="/">Play</a></li>
-                <li><a href="/">About</a></li>
-                <li><a href="https://github.com/ph3real/Ludo/tree/Branch" target="_blank">GitHub</a></li>
-            </ul>
-        </nav>
+<section id="play" class="play">
+    <div class="navbar">
+        <div class="container flex">
+            <nav>
+                <ul>
+                    <li><a href="#play">Play</a></li>
+                    <li><a href="/rules">Rules</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="https://github.com/ph3real/Ludo/tree/Branch" target="_blank">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
     </div>
-</div>
 
-<section class="play">
-    <div class="container stats">
+    <div class="stats">
         <div class="center">
             <h1 id="logo">LUDO</h1>
         </div>
@@ -39,46 +44,88 @@
             <button id="playButton" onclick="location.href='./play'">PLAY</button>
         </div>
     </div>
-    <!--    <div class="blur"></div>-->
 </section>
 
-<!--<section class="about">-->
-<!--    <div class="container">-->
-<!--        <div class="header">-->
-<!--            <h2 id="theTeam">The&nbsp;<b>team</b></h2>-->
-<!--        </div>-->
-<!--        <div class="grid-container">-->
-<!--            <div class="anthony-pfp">-->
-<!--                <img class="pfp" src="./images/pfp.png">-->
-<!--            </div>-->
-<!--            <div class="anthony">-->
-<!--                <h3>Anthony Nikolaidis</h3>-->
-<!--            </div>-->
-<!--            <div class="kostas-pfp">-->
-<!--                <img class="pfp" src="./images/pfp.png">-->
-<!--            </div>-->
-<!--            <div class="kostas">-->
-<!--                <h3>Kostas Stefanopoulos</h3>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</section>-->
+<section id="about" class="about">
+    <div class="container">
+        <div class="header-1">
+            <h2 id="theTeam">The&nbsp;<b>team</b></h2>
+        </div>
+        <div class="grid-container">
+            <div class="anthony-pfp">
+                <img class="pfp" src="./images/pfp.png">
+            </div>
+            <div class="anthony">
+                <h3>Anthony Nikolaidis</h3>
+            </div>
+            <div class="anthony-icons">
+                <div onclick="window.open('https://www.linkedin.com/in/antonis-nikolaidis-a86aba181/', '_blank');" class="linkedin drop-shadow">
+                    <img src="./images/linked_in.png">
+                </div>
+                <div onclick="window.open('https://twitter.com/tonynikolaidis', '_blank');" class="twitter drop-shadow">
+                    <img src="./images/twitter.png">
+                </div>
+                <div onclick="window.open('https://github.com/anthonynikolaidis', '_blank');" class="github drop-shadow">
+                    <img src="./images/github.png">
+                </div>
+            </div>
+            <div class="kostas-pfp">
+                <img class="pfp" src="./images/pfp.png">
+            </div>
+            <div class="kostas">
+                <h3>Kostas Stefanopoulos</h3>
+            </div>
+            <div class="kostas-icons">
+                <div class="linkedin drop-shadow">
+                    <img src="./images/linked_in.png">
+                </div>
+                <div class="twitter drop-shadow">
+                    <img src="./images/twitter.png">
+                </div>
+                <div class="github drop-shadow">
+                    <img src="./images/github.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-<!--<section class="technologies">-->
-<!--    <div class="header">-->
-<!--        <h2 id="madeWith">Made with</h2>-->
-<!--    </div>-->
-<!--    <div class="container">-->
-<!--        <img src="./images/html_css_js.png">-->
-<!--        <img src="./images/nodejs.png">-->
-<!--    </div>-->
-<!--</section>-->
+<section>
+    <div class="header-2">
+        <h2 id="madeWith">Technologies</h2>
+    </div>
+    <div class="technologies">
+        <div class="basic">
+            <div>
+                <img src="./images/html_logo.png">
+            </div>
+            <div>
+                <img src="./images/css_logo.png">
+            </div>
+            <div>
+                <img src="./images/js_logo.png">
+            </div>
+        </div>
+        <div class="node">
+            <div>
+                <img src="./images/nodejs.png">
+            </div>
+        </div>
+    </div>
+</section>
 
-<!--<footer>-->
-<!--    <p>&copy; Copyright 2021. All rights reserved.</p>-->
-<!--    <p>Developed for CSE1500 at the Technical University of Delft</p>-->
-<!--    <img src="./images/TU_delft_logo.png">-->
-<!--</footer>-->
+<footer>
+    <div id="left">
+        <p>&copy; Copyright 2021. All rights reserved.</p>
+    </div>
+    <div id="middle">
+        <p>Developed for CSE1500 at the Technical University of Delft.</p>
+    </div>
+    <div id="right">
+        <img src="./images/TU_delft_logo.png">
+    </div>
+</footer>
 
 </body>
+<script src="./javascripts/splash.js"></script>
 </html>

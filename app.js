@@ -16,10 +16,11 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 
 app.get("/", indexRouter);
+app.get("/rules", indexRouter);
 app.get("/play", indexRouter);
 
 const server = http.createServer(app).listen(port);
-const wss = new websocket.Server({ server });
+const wss = new websocket.Server({server});
 
 // declare essential variables
 let currentPlayerColor = '';
@@ -203,8 +204,7 @@ wss.on("connection", function connection(ws) {
         else if (message === "rollDice") {
 
             // roll the dice
-            // let numberRolled = randomRoll(1, 6);
-            let numberRolled = 6;
+            let numberRolled = randomRoll(1, 6);
 
             // get the player's color
             const playerColor = currGame.players.find(p => p.id === playerId).color;
@@ -225,22 +225,22 @@ wss.on("connection", function connection(ws) {
             let newPosition;
             let pawnSamePlayerSamePosition;
             let cannotMove = false;
-            for(let i = 0; i < pawnPositions.length; i++) {
+            for (let i = 0; i < pawnPositions.length; i++) {
                 pawnIndex = player.pawns[i].pawnRoute.findIndex(index => index === player.pawns[i].position);
-                
-                if(pawnIndex + numberRolled >= player.pawns[i].pawnRoute.length){
+
+                if (pawnIndex + numberRolled >= player.pawns[i].pawnRoute.length) {
                     cannotMove = true;
                     continue;
                 }
                 newPosition = player.pawns[i].pawnRoute[pawnIndex + numberRolled];
                 pawnSamePlayerSamePosition = player.pawns.find(p => p.position === newPosition);
-                
-                if(pawnSamePlayerSamePosition !== undefined){
+
+                if (pawnSamePlayerSamePosition !== undefined) {
                     cannotMove = true;
                     continue;
                 }
-                
-                if(numberRolled !== 6 && pawnIndex === 0){
+
+                if (numberRolled !== 6 && pawnIndex === 0) {
                     cannotMove = true;
                     continue;
                 }

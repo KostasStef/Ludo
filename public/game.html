@@ -1,54 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ludo</title>
     <link rel="stylesheet" type="text/css" href="./stylesheets/style.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Ludo | Play</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <link rel="icon" href="./images/pawn_red.png">
 </head>
 <body onload="connectToServer()" class="bodyback">
-    <div id="yourColor" class="text-white text-center pt"></div>
-    <div>
-        <button id="startGameButton" style="visibility: hidden" onclick="startGame()">Start game</button>
+<div class="top-row">
+    <div class="button">
+        <button class="leave-text" onclick="endGame()"><i class="material-icons">arrow_back</i>Leave&nbsp;</button>
+        <button class="disabled-button" id="startGameButton" style="visibility: hidden" onclick="startGame()"><i class="material-icons">play_arrow</i>Start game&nbsp;</button>
     </div>
-    <div>
-        <button id="rollTheDice" style="visibility: hidden;" onclick="rollTheDice()">Roll dice</button>
+    <div class="button">
+        <button class="disabled-button" id="rollTheDice" style="visibility: visible;" onclick="rollTheDice()"><i class="material-icons">casino</i><p id="roll">Roll dice</p>&nbsp;</button>
     </div>
-    <div id="gameScreen" style="visibility: visible">
-        <button onclick="endGame()">Leave game</button>
-        <div class="container">
+    <div class="yourColor text-tr">
+        <div class="text-white text-center"><p>Your color is <strong id="yourColor"></strong></p></div>
+    </div>
+    <div class="score text-tr">
+        <div class="text-white text-center">Score: <strong id="score"></strong></div>
+    </div>
+</div>
+<div id="gameScreen" style="visibility: visible">
+    <div class="container">
         <div class="container1">
             <div class="row1-col1 green">
                 <div class="row1-col1-child white">
-                    <div class="green" id="gh1">gh1</div>
-                    <div class="green" id="gh2">gh2</div>
-                    <div class="green" id="gh3">gh3</div>
-                    <div class="green" id="gh4">gh4</div>
+                    <div class="green" id="gh1"></div>
+                    <div class="green" id="gh2"></div>
+                    <div class="green" id="gh3"></div>
+                    <div class="green" id="gh4"></div>
                 </div>
             </div>   <!--green-->
             <div class="row1-col2">
                 <!--1st line-->
-                <div id="24" class="brdr white">24</div>
-                <div id="25" class="brdr white">25</div>
-                <div id="26" class="brdr white">26</div>
+                <div id="24" class="brdr white"></div>
+                <div id="25" class="brdr white"></div>
+                <div id="26" class="brdr white"></div>
                 <!--2nd line-->
-                <div id="23" class="brdr white">23</div>
-                <div id="y1" class="brdr yellow">y1</div>
-                <div id="27" class="brdr yellow">27</div>
+                <div id="23" class="brdr white"></div>
+                <div id="y1" class="brdr yellow"></div>
+                <div id="27" class="brdr yellow"></div>
                 <!--3rd line-->
-                <div id="22" class="brdr white">22</div>
-                <div id="y2" class="brdr yellow">y2</div>
-                <div id="28" class="brdr white">28</div>
+                <div id="22" class="brdr white"></div>
+                <div id="y2" class="brdr yellow"></div>
+                <div id="28" class="brdr white"></div>
                 <!--4th line-->
-                <div id="21" class="brdr white">21</div>
-                <div id="y3" class="brdr yellow">y3</div>
-                <div id="29" class="brdr white">29</div>
+                <div id="21" class="brdr white"></div>
+                <div id="y3" class="brdr yellow"></div>
+                <div id="29" class="brdr white"></div>
                 <!--5th line-->
-                <div id="20" class="brdr white">20</div>
-                <div id="y4" class="brdr yellow">y4</div>
-                <div id="30" class="brdr white">30</div>
+                <div id="20" class="brdr white"></div>
+                <div id="y4" class="brdr yellow"></div>
+                <div id="30" class="brdr white"></div>
                 <!--6th line-->
-                <div id="19" class="brdr white">19</div>
-                <div id="y5" class="brdr yellow">y5</div>
-                <div id="31" class="brdr white">31</div>
+                <div id="19" class="brdr white"></div>
+                <div id="y5" class="brdr yellow"></div>
+                <div id="31" class="brdr white"></div>
 
                 <div class="yellowGreen"></div>
                 <div id="yc" class="yellow">&nbsp;</div>
@@ -65,108 +79,108 @@
             </div>   <!--path-->
             <div class="row1-col3 yellow">
                 <div class="row1-col3-child white">
-                    <div class="yellow" id="yh1">yh1</div>
-                    <div class="yellow" id="yh2">yh2</div>
-                    <div class="yellow" id="yh3">yh3</div>
-                    <div class="yellow" id="yh4">yh4</div>
+                    <div class="yellow" id="yh1"></div>
+                    <div class="yellow" id="yh2"></div>
+                    <div class="yellow" id="yh3"></div>
+                    <div class="yellow" id="yh4"></div>
                 </div>
             </div>   <!--yellow-->
         </div>
         <div class="container2">
             <div class="row2-col1">
                 <!--1st line-->
-                <div id="13" class="brdr white">13</div>
-                <div id="14" class="brdr green">14</div>
-                <div id="15" class="brdr white">15</div>
-                <div id="16" class="brdr white">16</div>
-                <div id="17" class="brdr white">17</div>
-                <div id="18" class="brdr white">18</div>
+                <div id="13" class="brdr white"></div>
+                <div id="14" class="brdr green"></div>
+                <div id="15" class="brdr white"></div>
+                <div id="16" class="brdr white"></div>
+                <div id="17" class="brdr white"></div>
+                <div id="18" class="brdr white"></div>
                 <!--2nd line-->
-                <div id="12" class="brdr white">12</div>
-                <div id="g1" class="brdr green">g1</div>
-                <div id="g2" class="brdr green">g2</div>
-                <div id="g3" class="brdr green">g3</div>
-                <div id="g4" class="brdr green">g4</div>
-                <div id="g5" class="brdr green">g5</div>
+                <div id="12" class="brdr white"></div>
+                <div id="g1" class="brdr green"></div>
+                <div id="g2" class="brdr green"></div>
+                <div id="g3" class="brdr green"></div>
+                <div id="g4" class="brdr green"></div>
+                <div id="g5" class="brdr green"></div>
                 <!--3rd line-->
-                <div id="11" class="brdr white">11</div>
-                <div id="10" class="brdr white">10</div>
-                <div id="9" class="brdr white">9</div>
-                <div id="8" class="brdr white">8</div>
-                <div id="7" class="brdr white">7</div>
-                <div id="6" class="brdr white">6</div>
+                <div id="11" class="brdr white"></div>
+                <div id="10" class="brdr white"></div>
+                <div id="9" class="brdr white"></div>
+                <div id="8" class="brdr white"></div>
+                <div id="7" class="brdr white"></div>
+                <div id="6" class="brdr white"></div>
             </div>   <!--path-->
             <div class="row2-col2"></div>   <!--home-->
             <div class="row2-col3">
                 <!--1st line-->
-                <div id="32" class="brdr white">32</div>
-                <div id="33" class="brdr white">33</div>
-                <div id="34" class="brdr white">34</div>
-                <div id="35" class="brdr white">35</div>
-                <div id="36" class="brdr white">36</div>
-                <div id="37" class="brdr white">37</div>
+                <div id="32" class="brdr white"></div>
+                <div id="33" class="brdr white"></div>
+                <div id="34" class="brdr white"></div>
+                <div id="35" class="brdr white"></div>
+                <div id="36" class="brdr white"></div>
+                <div id="37" class="brdr white"></div>
                 <!--2nd line-->
-                <div id="b5" class="brdr blue">b5</div>
-                <div id="b4" class="brdr blue">b4</div>
-                <div id="b3" class="brdr blue">b3</div>
-                <div id="b2" class="brdr blue">b2</div>
-                <div id="b1" class="brdr blue">b1</div>
-                <div id="38" class="brdr white">38</div>
+                <div id="b5" class="brdr blue"></div>
+                <div id="b4" class="brdr blue"></div>
+                <div id="b3" class="brdr blue"></div>
+                <div id="b2" class="brdr blue"></div>
+                <div id="b1" class="brdr blue"></div>
+                <div id="38" class="brdr white"></div>
                 <!-- 3rd line-->
-                <div id="44" class="brdr white">44</div>
-                <div id="43" class="brdr white">43</div>
-                <div id="42" class="brdr white">42</div>
-                <div id="41" class="brdr white">41</div>
-                <div id="40" class="brdr blue">40</div>
-                <div id="39" class="brdr white">39</div>
+                <div id="44" class="brdr white"></div>
+                <div id="43" class="brdr white"></div>
+                <div id="42" class="brdr white"></div>
+                <div id="41" class="brdr white"></div>
+                <div id="40" class="brdr blue"></div>
+                <div id="39" class="brdr white"></div>
             </div>   <!--path-->
         </div>
         <div class="container3">
             <div class="row3-col1 red">
                 <div class="row3-col1-child white">
-                    <div class="red" id="rh1">rh1</div>
-                    <div class="red" id="rh2">rh2</div>
-                    <div class="red" id="rh3">rh3</div>
-                    <div class="red" id="rh4">rh4</div>
+                    <div class="red" id="rh1"></div>
+                    <div class="red" id="rh2"></div>
+                    <div class="red" id="rh3"></div>
+                    <div class="red" id="rh4"></div>
                 </div>
             </div>   <!--red-->
             <div class="row3-col2">
                 <!--6th line-->
-                <div id="5" class="brdr white">5</div>
-                <div id="r5" class="brdr red">r5</div>
-                <div id="45" class="brdr white">45</div>
+                <div id="5" class="brdr white"></div>
+                <div id="r5" class="brdr red"></div>
+                <div id="45" class="brdr white"></div>
                 <!--5th line-->
-                <div id="4" class="brdr white">4</div>
-                <div id="r4" class="brdr red">r4</div>
-                <div id="46" class="brdr white">46</div>
+                <div id="4" class="brdr white"></div>
+                <div id="r4" class="brdr red"></div>
+                <div id="46" class="brdr white"></div>
                 <!--4th line-->
-                <div id="3" class="brdr white">3</div>
-                <div id="r3" class="brdr red">r3</div>
-                <div id="47" class="brdr white">47</div>
+                <div id="3" class="brdr white"></div>
+                <div id="r3" class="brdr red"></div>
+                <div id="47" class="brdr white"></div>
                 <!--3rd line-->
-                <div id="2" class="brdr white">2</div>
-                <div id="r2" class="brdr red">r2</div>
-                <div id="48" class="brdr white">48</div>
+                <div id="2" class="brdr white"></div>
+                <div id="r2" class="brdr red"></div>
+                <div id="48" class="brdr white"></div>
                 <!--2nd line-->
-                <div id="1" class="brdr red">1</div>
-                <div id="r1" class="brdr red">r1</div>
-                <div id="49" class="brdr white">49</div>
+                <div id="1" class="brdr red"></div>
+                <div id="r1" class="brdr red"></div>
+                <div id="49" class="brdr white"></div>
                 <!--1st line-->
-                <div id="52" class="brdr white">52</div>
-                <div id="51" class="brdr white">51</div>
-                <div id="50" class="brdr white">50</div>
+                <div id="52" class="brdr white"></div>
+                <div id="51" class="brdr white"></div>
+                <div id="50" class="brdr white"></div>
             </div>   <!--path-->
             <div class="row3-col3 blue">
                 <div class="row3-col3-child white">
-                    <div class="blue" id="bh1">bh1</div>
-                    <div class="blue" id="bh2">bh2</div>
-                    <div class="blue" id="bh3">bh3</div>
-                    <div class="blue" id="bh4">bh4</div>
+                    <div class="blue" id="bh1"></div>
+                    <div class="blue" id="bh2"></div>
+                    <div class="blue" id="bh3"></div>
+                    <div class="blue" id="bh4"></div>
                 </div>
             </div>   <!--blue-->
         </div>
     </div>
-    </div>
+</div>
 </body>
 <script src="./javascripts/game.js"></script>
 </html>

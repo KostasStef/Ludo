@@ -11,6 +11,11 @@ router.get("/", (req, res) => {
     });
 });
 
+/* GET rules page */
+router.get("/rules", function (req, res) {
+    res.sendFile("rules.html", {root: "./public"});
+});
+
 /* GET game page */
 router.get("/play", function (req, res) {
     res.sendFile("game.html", {root: "./public"});

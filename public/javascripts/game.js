@@ -86,11 +86,17 @@ function updateBoard(players) {
                 let pawn = document.createElement("IMG");
                 pawn.src = imgSrc;
                 pawn.id = pawnId;
-                pawn.className = "pawn";
+
                 /*
                 var audio = new Audio('audio_file.mp3');
                 audio.play() <- eventlistener
                 */
+                if (typeof pawns[i].position === 'string' && pawns[i].position.includes('c')) {
+                    pawn.className = 'small-pawn';
+                } else {
+                    pawn.className = 'pawn';
+                }
+
                 document.getElementById(pawns[i].position).appendChild(pawn);
 
                 if (players[j].color === playerColor) {
@@ -106,14 +112,17 @@ function updateBoard(players) {
 
 function startGame() {
     console.log('Start Game');
-    document.getElementById("startGameButton").style.visibility = "hidden";
+    // document.getElementById("startGameButton").style.visibility = "visible";
+    // document.getElementById("startGameButton").style.pointerEvents = "none";
+    document.getElementById("startGameButton").classList.remove('start-game');
+    document.getElementById("startGameButton").classList.add('disabled-button');
     soc.send("startGame");
 }
 
 function connectToServer() {
     console.log("Connecting to server");
 
-    const socket = new WebSocket("ws://localhost:3000");
+    const socket = new WebSocket("ws://localhost:3000/");
 
     // socket.onopen = function(){
     //     socket.send("Hello from the client!");
@@ -130,8 +139,16 @@ function connectToServer() {
 
         if (gameState.exitCode !== null) {
             let code = gameState.exitCode.split(':')[0];
-            let error = gameState.exitCode.split(':')[1];
-            alert("Exit code " + code + ": " + error);
+            let msg = gameState.exitCode.split(':')[1];
+
+            if (code === '1') {
+                alert("Exit code " + code + ": " + msg);
+            } else if (code === '0') {
+                let color = gameState.exitCode.split('.')[0];
+                let msg = gameState.exitCode.split('.')[1];
+                alert(getColorName(color) + " won the game!");
+            }
+
             endGame();
         }
 
@@ -142,13 +159,26 @@ function connectToServer() {
             // This is going to be the user's color
             playerColor = gameState.players[gameState.players.length - 1].color;
             console.log('Player color is: ' + playerColor);
-            document.getElementById('yourColor').innerText = 'Your color is ' + getColorName(playerColor);
+            document.getElementById('yourColor').innerText = getColorName(playerColor);
+            if (playerColor === 'r') {
+                document.getElementById('yourColor').style.backgroundColor = '#C0392B';
+            } else if (playerColor === 'b') {
+                document.getElementById('yourColor').style.backgroundColor = '#2980b9';
+            } else if (playerColor === 'g') {
+                document.getElementById('yourColor').style.backgroundColor = '#27ae60';
+            } else if (playerColor === 'y') {
+                document.getElementById('yourColor').style.backgroundColor = '#f1c40f';
+            }
+
+            document.getElementById('score').innerText = '0';
 
             // This determines if the user is the host
             isHost = gameState.players[gameState.players.length - 1].isHost;
             console.log(playerColor + " is host = " + isHost);
-            if (isHost && gameState.players.length > 1) {
+            if (isHost && gameState.players.length === 1) {
                 document.getElementById('startGameButton').style.visibility = 'visible';
+                // document.getElementById("startGameButton").classList.remove('disabled-button');
+                // document.getElementById("startGameButton").classList.add('start-game');
             }
         }
 
@@ -157,22 +187,59 @@ function connectToServer() {
         if (player.isHost && !gameState.hasStarted && gameState.players.length > 1) {
             isHost = true;
             document.getElementById('startGameButton').style.visibility = 'visible';
+            document.getElementById("startGameButton").classList.remove('disabled-button');
+            document.getElementById("startGameButton").classList.add('start-game');
             console.log(playerColor + " is the new host.");
+        } else if (player.isHost && !gameState.hasStarted && gameState.players.length === 1) {
+            isHost = true;
+            document.getElementById('startGameButton').style.visibility = 'visible';
+            document.getElementById("startGameButton").classList.remove('start-game');
+            document.getElementById("startGameButton").classList.add('disabled-button');
         } else {
-            document.getElementById('startGameButton').style.visibility = 'hidden';
+            // document.getElementById('startGameButton').style.visibility = 'hidden';
+            document.getElementById("startGameButton").classList.remove('start-game');
+            document.getElementById("startGameButton").classList.add('disabled-button');
         }
 
         let dice = gameState.diceRoll;
 
         if (gameState.hasStarted && player.hasTurn && dice.state === 'toRoll') {
-            document.getElementById('rollTheDice').style.visibility = 'visible';
+            // document.getElementById('roll').innerText = 'Roll dice';
+            // document.getElementById('rollTheDice').style.visibility = 'visible';
+            // document.getElementById('rollTheDice').classList.remove('disabled-dice');
+            // document.getElementById('rollTheDice').classList.add('roll-dice');
+            document.getElementById('rollTheDice').className = 'roll-dice';
         } else {
-            document.getElementById('rollTheDice').style.visibility = 'hidden';
+            // document.getElementById('roll').innerText = 'Roll dice';
+            // document.getElementById('rollTheDice').style.visibility = 'hidden';
+            // document.getElementById('rollTheDice').classList.remove('roll-dice');
+            // document.getElementById('rollTheDice').classList.add('disabled-dice');
+            document.getElementById('rollTheDice').className = 'disabled-dice';
+
+            let pc = gameState.players.find(p => p.hasTurn === true).color;
+
+            if (pc === 'r') {
+                document.getElementById('rollTheDice').classList.add('red');
+            } else if (pc === 'b') {
+                document.getElementById('rollTheDice').classList.add('blue');
+            } else if (pc === 'g') {
+                document.getElementById('rollTheDice').classList.add('green');
+            } else if (pc === 'y') {
+                document.getElementById('rollTheDice').classList.add('yellow');
+            }
         }
 
-        if (dice !== null && dice.playerColor === playerColor && player.hasTurn && dice.state === 'rolled') {
+        if (dice.playerColor === playerColor && player.hasTurn && dice.state === 'rolled') {
             console.log(playerColor + " has rolled " + dice.roll);
             ArePawnsAvailable = true;
+        }
+
+        if ((dice.state === 'rolled' || dice.state === 'toRoll') && dice.roll > 0 && dice.roll < 7) {
+            document.getElementById('roll').innerText = 'Roll: ' + dice.roll;
+        }
+
+        if (gameState.hasStarted) {
+            document.getElementById('score').innerText = player.score;
         }
 
         // Generate all pawns based on gameState
