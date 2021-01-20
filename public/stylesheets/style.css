@@ -320,6 +320,12 @@ body {
     background-color: #462256;
 }
 
+.timer {
+    pointer-events: none;
+    background-color: #8e44ad;
+    color: #ecf0f1;
+}
+
 .disabled-dice {
     pointer-events: none;
     color: #34495e;
