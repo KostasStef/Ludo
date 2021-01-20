@@ -24,10 +24,10 @@
 <div class="top-row">
     <div class="button">
         <button class="leave-text" onclick="endGame()"><i class="material-icons">arrow_back</i>Leave&nbsp;</button>
-        <button class="disabled-button" id="startGameButton" style="visibility: hidden" onclick="startGame()"><i class="material-icons">play_arrow</i>Start game&nbsp;</button>
+        <button class="disabled-button" id="startGameButton" style="visibility: visible" onclick="startGame()"><i id="change-to-timer" class="material-icons">play_arrow</i><p id="time">Start game</p>&nbsp;</button>
     </div>
     <div class="button">
-        <button class="disabled-button" id="rollTheDice" style="visibility: visible;" onclick="rollTheDice()"><i class="material-icons">casino</i><p id="roll">Roll dice</p>&nbsp;</button>
+        <button class="disabled-button" id="rollTheDice" style="visibility: visible" onclick="rollTheDice()"><i class="material-icons">casino</i><p id="roll">Roll dice</p>&nbsp;</button>
     </div>
     <div class="yourColor text-tr">
         <div class="text-white text-center"><p>Your color is <strong id="yourColor"></strong></p></div>
