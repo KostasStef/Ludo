@@ -312,3 +312,6 @@ function start() {
     }, 1000);
 }
 
+function hideMessage() {
+    document.getElementsByClassName("warning")[0].setAttribute("style", "visibility: hidden");
+}
