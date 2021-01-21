@@ -204,6 +204,7 @@ wss.on("connection", function connection(ws) {
         else if (message === "rollDice") {
             // roll the dice
             let numberRolled = randomRoll(1, 6);
+
             // get the player's color
             const playerColor = currGame.players.find(p => p.id === playerId).color;
 
@@ -213,7 +214,7 @@ wss.on("connection", function connection(ws) {
                 roll: numberRolled,
                 state: 'rolled'
             };
-            games.find(g=>g.id===gameId).players.find(p => p.id === playerId).score++;
+            // games.find(g=>g.id===gameId).players.find(p => p.id === playerId).score++;
 
             let pawnPositions = [];
             for (let i = 0; i < player.pawns.length; i++) {
@@ -225,22 +226,25 @@ wss.on("connection", function connection(ws) {
             let pawnSamePlayerSamePosition;
             let cannotMove = false;
             for (let i = 0; i < pawnPositions.length; i++) {
-                pawnIndex = player.pawns[i].pawnRoute.findIndex(index => index === player.pawns[i].position);
+                pawnIndex = player.pawns[i].pawnRoute.findIndex(pos => pos === player.pawns[i].position);
 
-                if (pawnIndex + numberRolled >= player.pawns[i].pawnRoute.length) {
+                if (pawnIndex + numberRolled > player.pawns[i].pawnRoute.length - 1) {
                     cannotMove = true;
+                    console.log("First case");
                     continue;
                 }
                 newPosition = player.pawns[i].pawnRoute[pawnIndex + numberRolled];
                 pawnSamePlayerSamePosition = player.pawns.find(p => p.position === newPosition);
 
-                if (pawnSamePlayerSamePosition !== undefined) {
+                if (pawnSamePlayerSamePosition !== undefined && !newPosition.includes('c')) {
                     cannotMove = true;
+                    console.log("Second case");
                     continue;
                 }
 
                 if (numberRolled !== 6 && pawnIndex === 0) {
                     cannotMove = true;
+                    console.log("Third case");
                     continue;
                 }
 
@@ -251,6 +255,7 @@ wss.on("connection", function connection(ws) {
             // if all pawns are in the home positions, then change turns
             if (cannotMove) {
                 // change turns
+                console.log("Change turns");
                 changeTurns(gameId, playerId);
                 games.find(g => g.id === gameId).diceRoll.state = 'toRoll';
             }
@@ -330,7 +335,7 @@ wss.on("connection", function connection(ws) {
                         .score;
 
                     // if score is 4, then end the game for everyone
-                    if (score >= 4) {
+                    if (score === 4) {
                         games.find(item => item.id === gameId).exitCode = '0:' + player.color + '.WON_THE_GAME';
                     }
 
