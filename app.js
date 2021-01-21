@@ -230,21 +230,21 @@ wss.on("connection", function connection(ws) {
 
                 if (pawnIndex + numberRolled > player.pawns[i].pawnRoute.length - 1) {
                     cannotMove = true;
-                    console.log("First case");
                     continue;
                 }
                 newPosition = player.pawns[i].pawnRoute[pawnIndex + numberRolled];
+                console.log('New pos: ' + newPosition);
                 pawnSamePlayerSamePosition = player.pawns.find(p => p.position === newPosition);
 
-                if (pawnSamePlayerSamePosition !== undefined && !newPosition.includes('c')) {
+                let isCenterPosition = typeof newPosition === 'string' ? newPosition.includes('c') : false;
+
+                if (pawnSamePlayerSamePosition !== undefined && !isCenterPosition) {
                     cannotMove = true;
-                    console.log("Second case");
                     continue;
                 }
 
                 if (numberRolled !== 6 && pawnIndex === 0) {
                     cannotMove = true;
-                    console.log("Third case");
                     continue;
                 }
 
@@ -255,7 +255,6 @@ wss.on("connection", function connection(ws) {
             // if all pawns are in the home positions, then change turns
             if (cannotMove) {
                 // change turns
-                console.log("Change turns");
                 changeTurns(gameId, playerId);
                 games.find(g => g.id === gameId).diceRoll.state = 'toRoll';
             }
