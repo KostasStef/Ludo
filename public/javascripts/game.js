@@ -4,6 +4,7 @@ let playerColor = '';
 let isHost = null;
 let ArePawnsAvailable = false;
 let startTimer = false;
+let printTimerValue = true;
 
 function getColorName(code) {
     let colorName = '';
@@ -142,14 +143,23 @@ function connectToServer() {
             let msg = gameState.exitCode.split(':')[1];
 
             if (code === '1') {
-                alert("Exit code " + code + ": " + msg);
+                console.log("Exit code " + code + ": " + msg);
+                // alert("Exit code " + code + ": " + msg);
+                endGame();
             } else if (code === '0') {
                 let color = msg.split('.')[0];
-                document.getElementsByClassName("winning")[0].innerText = ""+ getColorName(color) + " has won the game!";
-                document.getElementsByClassName("winning")[0].setAttribute("style", "visibility: visible; color:white; background-color:"+getColorName(color));
-                alert(getColorName(color) + " won the game!");
+                let winnerDiv = document.getElementById("winnerDiv");
+                winnerDiv.innerText = ""+ getColorName(color) + " has won the game!";
+                let textColor = "white";
+                if (color === 'y') {
+                    textColor = "black"
+                }
+                winnerDiv.setAttribute("style", "visibility: visible; color:" + textColor +"; background-color:"+getColorName(color));
+                printTimerValue = false;
+                document.getElementById("rollTheDice").style.visibility = "hidden";
+                // window.alert(getColorName(color) + " won the game!");
              }
-             endGame();
+            // endGame();
         }
 
         if (playerColor === '') {
@@ -307,7 +317,9 @@ function start() {
         //     i = 0;
         // }
         // console.log('i = ' + i);
-        print(timeToString(elapsedTime), i);
+        if (printTimerValue) {
+            print(timeToString(elapsedTime), i);
+        }
         // i++;
     }, 1000);
 }
