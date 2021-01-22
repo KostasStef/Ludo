@@ -1,5 +1,4 @@
 let soc = null;
-let connectionID = null;
 let playerColor = '';
 let isHost = null;
 let ArePawnsAvailable = false;
@@ -32,9 +31,8 @@ function setPawn(e) {
     let pawnId = e.path[0].id;
     if (ArePawnsAvailable) {
         ArePawnsAvailable = false;
-        console.log(pawnId + " was clicked.");
         soc.send("movedPawn " + pawnId);
-        var audio = new Audio('./sfx/movePiece.wav');
+        let audio = new Audio('./sfx/movePiece.wav');
         audio.play();
     }
 }
@@ -112,9 +110,6 @@ function updateBoard(players) {
 }
 
 function startGame() {
-    console.log('Start Game');
-    // document.getElementById("startGameButton").style.visibility = "visible";
-    // document.getElementById("startGameButton").style.pointerEvents = "none";
     document.getElementById("startGameButton").classList.remove('start-game');
     document.getElementById("startGameButton").classList.add('disabled-button');
     soc.send("startGame");
@@ -125,18 +120,11 @@ function connectToServer() {
 
     const socket = new WebSocket("ws://localhost:3000/");
 
-    // socket.onopen = function(){
-    //     socket.send("Hello from the client!");
-    //     console.log("Connection opened");
-    //     console.log(socket);
-    // };
-
     soc = socket;
     let gameState;
 
     socket.onmessage = function (e) {
         gameState = JSON.parse(e.data);
-        console.log(gameState);
 
         if (gameState.exitCode !== null) {
             let code = gameState.exitCode.split(':')[0];
@@ -144,7 +132,6 @@ function connectToServer() {
 
             if (code === '1') {
                 console.log("Exit code " + code + ": " + msg);
-                // alert("Exit code " + code + ": " + msg);
                 endGame();
             } else if (code === '0') {
                 let color = msg.split('.')[0];
@@ -157,9 +144,7 @@ function connectToServer() {
                 winnerDiv.setAttribute("style", "visibility: visible; color:" + textColor +"; background-color:"+getColorName(color));
                 printTimerValue = false;
                 document.getElementById("rollTheDice").style.visibility = "hidden";
-                // window.alert(getColorName(color) + " won the game!");
              }
-            // endGame();
         }
 
         if (playerColor === '') {
@@ -168,7 +153,7 @@ function connectToServer() {
 
             // This is going to be the user's color
             playerColor = gameState.players[gameState.players.length - 1].color;
-            console.log('Player color is: ' + playerColor);
+
             document.getElementById('yourColor').innerText = getColorName(playerColor);
             if (playerColor === 'r') {
                 document.getElementById('yourColor').style.backgroundColor = '#C0392B';
@@ -184,11 +169,8 @@ function connectToServer() {
 
             // This determines if the user is the host
             isHost = gameState.players[gameState.players.length - 1].isHost;
-            console.log(playerColor + " is host = " + isHost);
             if (isHost && gameState.players.length === 1) {
                 document.getElementById('startGameButton').style.visibility = 'visible';
-                // document.getElementById("startGameButton").classList.remove('disabled-button');
-                // document.getElementById("startGameButton").classList.add('start-game');
             }
         }
 
@@ -199,14 +181,12 @@ function connectToServer() {
             document.getElementById('startGameButton').style.visibility = 'visible';
             document.getElementById("startGameButton").classList.remove('disabled-button');
             document.getElementById("startGameButton").classList.add('start-game');
-            console.log(playerColor + " is the new host.");
         } else if (player.isHost && !gameState.hasStarted && gameState.players.length === 1) {
             isHost = true;
             document.getElementById('startGameButton').style.visibility = 'visible';
             document.getElementById("startGameButton").classList.remove('start-game');
             document.getElementById("startGameButton").classList.add('disabled-button');
         } else {
-            // document.getElementById('startGameButton').style.visibility = 'hidden';
             document.getElementById("startGameButton").classList.remove('start-game');
             document.getElementById("startGameButton").classList.add('disabled-button');
         }
@@ -214,16 +194,8 @@ function connectToServer() {
         let dice = gameState.diceRoll;
 
         if (gameState.hasStarted && player.hasTurn && dice.state === 'toRoll') {
-            // document.getElementById('roll').innerText = 'Roll dice';
-            // document.getElementById('rollTheDice').style.visibility = 'visible';
-            // document.getElementById('rollTheDice').classList.remove('disabled-dice');
-            // document.getElementById('rollTheDice').classList.add('roll-dice');
             document.getElementById('rollTheDice').className = 'roll-dice';
         } else {
-            // document.getElementById('roll').innerText = 'Roll dice';
-            // document.getElementById('rollTheDice').style.visibility = 'hidden';
-            // document.getElementById('rollTheDice').classList.remove('roll-dice');
-            // document.getElementById('rollTheDice').classList.add('disabled-dice');
             document.getElementById('rollTheDice').className = 'disabled-dice';
 
             let pc = '';
@@ -244,7 +216,6 @@ function connectToServer() {
         }
 
         if (dice.playerColor === playerColor && player.hasTurn && dice.state === 'rolled') {
-            console.log(playerColor + " has rolled " + dice.roll);
             ArePawnsAvailable = true;
         }
 
@@ -288,12 +259,8 @@ function timeToString(time) {
     let diffInSec = (diffInMin - mm) * 60;
     let ss = Math.floor(diffInSec);
 
-    // let diffInMs = (diffInSec - ss) * 100;
-    // let ms = Math.floor(diffInMs);
-
     let formattedMM = mm.toString().padStart(2, "0");
     let formattedSS = ss.toString().padStart(2, "0");
-    // let formattedMS = ms.toString().padStart(2, "0");
 
     return `${formattedMM}:${formattedSS}`;
 }
@@ -313,14 +280,9 @@ function start() {
     startTime = Date.now() - elapsedTime;
     timerInterval = setInterval(function printTime() {
         elapsedTime = Date.now() - startTime;
-        // if (i === 4) {
-        //     i = 0;
-        // }
-        // console.log('i = ' + i);
         if (printTimerValue) {
             print(timeToString(elapsedTime), i);
         }
-        // i++;
     }, 1000);
 }
 
